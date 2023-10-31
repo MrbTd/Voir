@@ -77,7 +77,7 @@ import CustomText from './CustomText';
             marginTop
           }}>
        
-          <CustomText color= {colorText} fontWeight={fontWeight} fontSize={fontSize}>{label}</CustomText>
+          <CustomText textAlign='center' color= {colorText} fontWeight={fontWeight} fontSize={fontSize}>{label}</CustomText>
         </TouchableOpacity>
       </View>
     );
