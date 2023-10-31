@@ -1,50 +1,52 @@
-import React, { useCallback, useRef, useMemo } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import React, { useState } from 'react';
+import { BottomSheet, Button, ListItem } from '@rneui/themed';
+import { StyleSheet, View, Text, FlexAlignType, ScrollView } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { paletteColor } from '../utils/Constantes';
+import CustomButton from './CustomButton';
 
-const BottomSheetComponent = () => {
-  // hooks
-  const sheetRef = useRef<BottomSheet>(null);
-
-  // variables
-  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
-
-  // callbacks
-  const handleSheetChange = useCallback((index: any) => {
-    console.log("handleSheetChange", index);
-  }, []);
-  const handleSnapPress = useCallback((index: number) => {
-    sheetRef.current?.snapToIndex(index);
-  }, []);
-  const handleClosePress = useCallback(() => {
-    sheetRef.current?.close();
-  }, []);
-
-  // render
-  return (
-    <View style={styles.container}>
-      <Button title="Snap To 90%" onPress={() => handleSnapPress(2)} />
-      <Button title="Snap To 50%" onPress={() => handleSnapPress(1)} />
-      <Button title="Snap To 25%" onPress={() => handleSnapPress(0)} />
-      <Button title="Close" onPress={() => handleClosePress()} />
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        onChange={handleSheetChange}
-      >
-        <BottomSheetView>
-          <Text>Awesome 🔥</Text>
-        </BottomSheetView>
-      </BottomSheet>
-    </View>
-  );
+interface BottomSheetComponentProps {
+  title:string;
+  isVisible: boolean | undefined;
+  onCancel: ((params: any) => any) | undefined;
+  onSave: ((params: any) => any) | undefined;
+  children: any;
+ 
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 200,
-  },
-});
+const BottomSheetComponent = ({title,onCancel,onSave, isVisible, children}: BottomSheetComponentProps) => {
+  return (<SafeAreaProvider>
+    <BottomSheet modalProps={{}} isVisible={isVisible}
+    >
+      <View
+        style={{borderTopLeftRadius: 15, borderTopRightRadius: 15 ,backgroundColor:paletteColor.white,paddingVertical:"8%",paddingHorizontal:"4%"}}>
+         <ScrollView>
+         <CustomButton
+            backgroundColor={paletteColor.marron}
+            label={title}
+            marginTop={10}
+            colorText={paletteColor.white}
+            fontSize={20}
+            fontWeight="bold"
+            disabled={true}
+            borderRadius={0}
+            />
+         {children}
+         <View style={{flexDirection:"row",justifyContent:"space-between",marginTop:"5%"}}>
+                <View style={{width:"30%"}}>
+                    <CustomButton label='Annuler' backgroundColor={paletteColor.white}  onPress={onCancel} borderColor={paletteColor.yellow} borderWidth={2} colorText={paletteColor.yellow} />
+                </View>
+                <View style={{width:"45%"}}>
+                    <CustomButton label="Sauvegarder" onPress={onSave} backgroundColor={paletteColor.yellow}/>
+                </View> 
+            </View>
+         </ScrollView>
+      </View>
+
+    </BottomSheet>
+  </SafeAreaProvider>)
+}
+
+
 
 export default BottomSheetComponent;
