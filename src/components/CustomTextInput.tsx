@@ -106,7 +106,6 @@ import {
             editable={editable}
           />
           {verifIcon == true && (
-            <View>
               <TouchableOpacity onPress={onPress}>
                 <MaterialCommunityIcons
                   color={colorIcon}
@@ -114,7 +113,6 @@ import {
                   size={25}
                 />
               </TouchableOpacity>
-            </View>
           )}
         </View>
       </View>

@@ -76,4 +76,73 @@ export const data =[
 
   
  ]
+
+ export const dataUsers=[
+
+  {
+    id:1,
+    name:"Anoman",
+    lastName:"Sara",
+    type:"Cuisinier",
+    age:35,
+    email:"mrbtf@gmail.com",
+    contact:"0807245655",
+    adresse:"Marcory residentiel"
+  },
+  {
+    id:2,
+    name:"Coulibaly",
+    lastName:"Boris Boniface",
+    type:"Cuisinier",
+    age:32,
+    email:"coulby@gmail.com",
+    contact:"780724565",
+    adresse:"Treichville av 13"
+  },
+  {
+    id:3,
+    name:"Didier",
+    lastName:"Hippolyte",
+    type:"Serveur",
+    age:22,
+    email:"hippo@gmail.com",
+    contact:"0103567455",
+    adresse:"Yopougon maroc"
+  },
+  {
+    id:4,
+    name:"Yao",
+    lastName:"Parfait",
+    type:"Gerante",
+    age:31,
+    email:"yao@gmail.com",
+    contact:"080724565",
+    adresse:"Port bouet"
+  },
+  {
+    id:5,
+    name:"Kouadio",
+    lastName:"George",
+    type:"Cuisinier"
+  },
+  {
+    id:6,
+    name:"Traore",
+    lastName:"Issouf ",
+    type:"Cuisinier"
+  },
+  {
+    id:7,
+    name:"Kder",
+    lastName:"Keita",
+    type:"Serveur"
+  },
+  {
+    id:8,
+    name:"Solange",
+    lastName:"Pricile",
+    type:"Gerante"
+  },
+  
+]
   
