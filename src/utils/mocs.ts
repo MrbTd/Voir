@@ -145,4 +145,45 @@ export const data =[
   },
   
 ]
+
+export const dataCategoriePlat=[
+  {
+    id:"AxZEDK1265",
+    categorie:"Entrées",
+    description:"Une selection de delicieuses entrées, pour vous ouvrir l'appétit.",
+    souscategorie:["Soupe,salade,amuse bouches"],
+    prixm:[5000,7000],
+    allegerne:["Gluten","fruit de mers"]
+    
+  },
+  {
+    id:"0QDMOPBF56",
+    categorie:"Desserts",
+    description:"Une selection de delicieuses entrées, pour vous ouvrir l'appétit.",
+    souscategorie:["Soupe,salade,amuse bouches"],
+    prixm:[5000,7000],
+    allegerne:["Gluten","fruit de mers"]
+    
+  },
+  {
+    id:"l5ZaSN1265",
+    categorie:"Plats",
+    description:"Une selection de delicieuses entrées, pour vous ouvrir l'appétit.",
+    souscategorie:["Soupe,salade,amuse bouches"],
+    prixm:[5000,7000],
+    allegerne:["Gluten","fruit de mers"]
+    
+  },
+  {
+    id:"ZPM6qv72g4",
+    categorie:"Boissons",
+    description:"Une selection de delicieuses entrées, pour vous ouvrir l'appétit.",
+    souscategorie:["Soupe,salade,amuse bouches"],
+    prixm:[5000,7000],
+    allegerne:["Gluten","fruit de mers"]
+    
+  },
+  
+  
+]
   

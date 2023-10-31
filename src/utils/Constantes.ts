@@ -18,6 +18,8 @@ export const imageRessource={
     user:require('../assets/user.jpg'),
     deconnexion:require('../assets/deconnexion.png'),
     salade:require('../assets/salade.jpg'),
+    eat:require('../assets/eat.jpg'),
+    upload:require('../assets/upload.png'),
 
 
 

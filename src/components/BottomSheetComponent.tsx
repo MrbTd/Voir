@@ -7,6 +7,7 @@ import CustomButton from './CustomButton';
 
 interface BottomSheetComponentProps {
   title:string;
+  btnTitle?:string;
   isVisible: boolean | undefined;
   onCancel: ((params: any) => any) | undefined;
   onSave: ((params: any) => any) | undefined;
@@ -14,7 +15,7 @@ interface BottomSheetComponentProps {
  
 };
 
-const BottomSheetComponent = ({title,onCancel,onSave, isVisible, children}: BottomSheetComponentProps) => {
+const BottomSheetComponent = ({title,btnTitle="Sauvegarder",onCancel,onSave, isVisible, children}: BottomSheetComponentProps) => {
   return (<SafeAreaProvider>
     <BottomSheet modalProps={{}} isVisible={isVisible}
     >
@@ -37,7 +38,7 @@ const BottomSheetComponent = ({title,onCancel,onSave, isVisible, children}: Bott
                     <CustomButton label='Annuler' backgroundColor={paletteColor.white}  onPress={onCancel} borderColor={paletteColor.yellow} borderWidth={2} colorText={paletteColor.yellow} />
                 </View>
                 <View style={{width:"45%"}}>
-                    <CustomButton label="Sauvegarder" onPress={onSave} backgroundColor={paletteColor.yellow}/>
+                    <CustomButton label={btnTitle} onPress={onSave} backgroundColor={paletteColor.yellow}/>
                 </View> 
             </View>
          </ScrollView>

@@ -1,14 +1,12 @@
 import { Dimensions, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import HeaderYam from '../../../components/HeaderYam'
-import CustomButton from '../../../components/CustomButton'
-import { imageRessource, paletteColor } from '../../../utils/Constantes'
-import CustomText from '../../../components/CustomText'
+import HeaderYam from '../../../../components/HeaderYam'
+import CustomButton from '../../../../components/CustomButton'
+import { imageRessource, paletteColor } from '../../../../utils/Constantes'
 import { ScrollView } from 'react-native-gesture-handler'
-import { Avatar, Badge, Icon, withBadge } from '@rneui/themed';
-import BottomSheetComponent from '../../../components/BottomSheetComponent'
-import ModalComponent from '../../../components/ModalComponent'
-import DisplayDetailsComponent from '../../../components/DisplayDetailsComponent'
+import BottomSheetComponent from '../../../../components/BottomSheetComponent'
+import ModalComponent from '../../../../components/ModalComponent'
+import DisplayDetailsComponent from '../../../../components/DisplayDetailsComponent'
 import { useNavigation } from '@react-navigation/native'
 
    
@@ -29,7 +27,10 @@ const DetailsUtilisateur = ({route}:any) => {
     onContinue={()=>setModalVisible(false)} 
     onCancel={()=>setModalVisible(false)}/>
 
-    <BottomSheetComponent title="Editer l'utilisateur" isVisible={bottomVisible} onCancel={()=>setBottomVisible(false)} onSave={()=>{
+    <BottomSheetComponent title="Modifier l'utilisateur" 
+    isVisible={bottomVisible} 
+    onCancel={()=>setBottomVisible(false)} 
+    onSave={()=>{
         setBottomVisible(false)
         navigation.navigate("ListUtilisateur" as never)
         }}>
