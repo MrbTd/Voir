@@ -13,6 +13,11 @@ const Stack = createStackNavigator();
 const StackHomeGerant = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="CategoriePlat" component={CategoriePlat}
+                        options={{cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,}} />
+                
+                <Stack.Screen name="DetailsCategoriePlat" component={DetailsCategoriePlat}
+                       options={{cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,}} />
 
             <Stack.Screen name="SousCategoriePlat" component={SousCategoriePlat}
                     options={{cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,}} />
@@ -20,11 +25,6 @@ const StackHomeGerant = () => {
             <Stack.Screen name="DetailsSousCategoriePlat" component={DetailsSousCategoriePlat}
                    options={{cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,}} />
 
-            <Stack.Screen name="CategoriePlat" component={CategoriePlat}
-                    options={{cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,}} />
-
-            <Stack.Screen name="DetailsCategoriePlat" component={DetailsCategoriePlat}
-                   options={{cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,}} />
 
           
             <Stack.Screen name="ListUtilisateur" component={ListUtilisateur}
