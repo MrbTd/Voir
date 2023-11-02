@@ -6,6 +6,7 @@ import {
 import StackLogin from './StackLogin';
 import StackHome from './StackHome';
 import StackHomeGerant from './StackHomeGerant';
+import DrawerNavigation from './DrawerNavigation';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +15,7 @@ const GlobalNavigation = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
                 
-                <Stack.Screen name="StackHomeGerant" component={StackHomeGerant} />
+                <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
                 <Stack.Screen name="StackHome" component={StackHome} />
                 <Stack.Screen name="StackLogin" component={StackLogin} />
 

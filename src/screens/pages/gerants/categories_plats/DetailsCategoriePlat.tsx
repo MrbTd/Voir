@@ -7,7 +7,8 @@ import { ScrollView } from 'react-native-gesture-handler'
 import BottomSheetComponent from '../../../../components/BottomSheetComponent'
 import ModalComponent from '../../../../components/ModalComponent'
 import DisplayDetailsComponent from '../../../../components/DisplayDetailsComponent'
-import { useNavigation } from '@react-navigation/native'
+import { DrawerActions, useNavigation } from '@react-navigation/native'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
    
 
@@ -20,31 +21,13 @@ const DetailsCategoriePlat = ({route}:any) => {
   return (
     <View style={{height:Dimensions.get("screen").height}}>
 
-    <ModalComponent 
-    title="SUPPRESSION DE CATEGORIE"
-    subtitle="Attention, vous êtes sur le point de supprimer une catégorie. Etes vous sûr de vouloir conntinuer ?"
-    modalVisible={modalVisible} 
-    onContinue={()=>setModalVisible(false)} 
-    onCancel={()=>setModalVisible(false)}/>
+   
 
-    <BottomSheetComponent title="Modifier la catégorie" isVisible={bottomVisible} onCancel={()=>setBottomVisible(false)} onSave={()=>{
-        setBottomVisible(false)
-        navigation.navigate("ListUtilisateur" as never)
-        }}>
-                <DisplayDetailsComponent title='NOM'value={item.categorie}/>
-                <DisplayDetailsComponent title='DESCRIPTION'value={item.description}/>
-                <DisplayDetailsComponent title='SOUS-CATEGORIE'value={item.souscategorie}/>
-                <DisplayDetailsComponent title='PRIX MOYEN'value={item.prixm}/>
-                <DisplayDetailsComponent title="ALLERGENES COURANTS"value={item.allegerne}/>
-                <DisplayDetailsComponent title='PHOTO'img={true} value={ 
-                    <View>
-                        <Image source={imageRessource.eat} style={{width:50,height:50,resizeMode:"cover",borderRadius:8}}/>
-                    </View>
-                }/>
-    </BottomSheetComponent>
-
-    <HeaderYam/>
-     <ScrollView style={{marginHorizontal:"5%",marginTop:'2%'}} contentContainerStyle={{paddingBottom:100}} showsVerticalScrollIndicator={false}>
+    <HeaderYam navigate={<MaterialIcons name='menu' size={35} color={paletteColor.white}     
+        onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}
+        />}
+        />
+        <ScrollView style={{marginHorizontal:"5%",marginTop:'2%'}} contentContainerStyle={{paddingBottom:100}} showsVerticalScrollIndicator={false}>
         <CustomButton
             backgroundColor={paletteColor.marron}
             label="Détails de la catégorie"
@@ -75,6 +58,28 @@ const DetailsCategoriePlat = ({route}:any) => {
                 </View> 
             </View>
      </ScrollView>
+     <ModalComponent 
+    title="SUPPRESSION DE CATEGORIE"
+    subtitle="Attention, vous êtes sur le point de supprimer une catégorie. Etes vous sûr de vouloir conntinuer ?"
+    modalVisible={modalVisible} 
+    onContinue={()=>setModalVisible(false)} 
+    onCancel={()=>setModalVisible(false)}/>
+
+    <BottomSheetComponent title="Modifier la catégorie" isVisible={bottomVisible} onCancel={()=>setBottomVisible(false)} onSave={()=>{
+        setBottomVisible(false)
+        navigation.navigate("ListUtilisateur" as never)
+        }}>
+                <DisplayDetailsComponent title='NOM'value={item.categorie}/>
+                <DisplayDetailsComponent title='DESCRIPTION'value={item.description}/>
+                <DisplayDetailsComponent title='SOUS-CATEGORIE'value={item.souscategorie}/>
+                <DisplayDetailsComponent title='PRIX MOYEN'value={item.prixm}/>
+                <DisplayDetailsComponent title="ALLERGENES COURANTS"value={item.allegerne}/>
+                <DisplayDetailsComponent title='PHOTO'img={true} value={ 
+                    <View>
+                        <Image source={imageRessource.eat} style={{width:50,height:50,resizeMode:"cover",borderRadius:8}}/>
+                    </View>
+                }/>
+    </BottomSheetComponent>
     </View>
   )
 }

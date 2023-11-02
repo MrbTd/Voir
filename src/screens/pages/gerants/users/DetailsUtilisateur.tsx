@@ -7,7 +7,8 @@ import { ScrollView } from 'react-native-gesture-handler'
 import BottomSheetComponent from '../../../../components/BottomSheetComponent'
 import ModalComponent from '../../../../components/ModalComponent'
 import DisplayDetailsComponent from '../../../../components/DisplayDetailsComponent'
-import { useNavigation } from '@react-navigation/native'
+import { DrawerActions, useNavigation } from '@react-navigation/native'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
    
 
@@ -48,8 +49,11 @@ const DetailsUtilisateur = ({route}:any) => {
                 }/>
     </BottomSheetComponent>
 
-    <HeaderYam/>
-     <ScrollView style={{marginHorizontal:"5%",marginTop:'2%'}} contentContainerStyle={{paddingBottom:100}} showsVerticalScrollIndicator={false}>
+    <HeaderYam navigate={<MaterialIcons name='menu' size={35} color={paletteColor.white}     
+        onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}
+        />}
+        />
+        <ScrollView style={{marginHorizontal:"5%",marginTop:'2%'}} contentContainerStyle={{paddingBottom:100}} showsVerticalScrollIndicator={false}>
         <CustomButton
             backgroundColor={paletteColor.marron}
             label="Détails de l'utilisateur"

@@ -18,8 +18,8 @@ const renderItem=({item}:any)=> (
 
     <View style={{width:"21%"}}>
     <CustomText  fontWeight='bold' textAlign="left">{item.price} Fr</CustomText>
-    </View>
-
+    </View> 
+ 
     <View style={{width:"21%"}}>
     <CustomText  fontWeight='bold' textAlign="left">{item.quantite}</CustomText>
     </View>

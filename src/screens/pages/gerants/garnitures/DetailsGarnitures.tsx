@@ -12,7 +12,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
    
 
-const DetailsSousCategoriePlat = ({route}:any) => {
+const DetailsGarnitures = ({route}:any) => {
     const item=route.params
     const navigation=useNavigation()
     const [modalVisible,setModalVisible]=useState(false)
@@ -28,7 +28,7 @@ const DetailsSousCategoriePlat = ({route}:any) => {
      <ScrollView style={{marginHorizontal:"5%"}} contentContainerStyle={{paddingBottom:100}} showsVerticalScrollIndicator={false}>
         <CustomButton
             backgroundColor={paletteColor.marron}
-            label="Détails sous catégorie"
+            label="Détails garniture"
             marginTop={10}
             colorText={paletteColor.white}
             fontSize={20}
@@ -52,19 +52,19 @@ const DetailsSousCategoriePlat = ({route}:any) => {
                     <CustomButton label='Modifier' backgroundColor={paletteColor.yellow}  onPress={()=>setBottomVisible(!bottomVisible)}/>
                 </View>
                 <View style={{width:"45%"}}>
-                    <CustomButton  label="Supprimer la sous catégorie" onPress={()=>setModalVisible(!modalVisible)}/>
+                    <CustomButton  label="Supprimer la garniture" onPress={()=>setModalVisible(!modalVisible)}/>
                 </View> 
             </View>
      </ScrollView>
 
      <ModalComponent 
-    title="SUPPRESSION DE LA SOUS CATEGORIE"
-    subtitle="Attention, vous êtes sur le point de supprimer une sous catégorie. Etes vous sûr de vouloir conntinuer ?"
+    title="SUPPRESSION DE LA GARNITURE"
+    subtitle="Attention, vous êtes sur le point de supprimer une garniture. Etes vous sûr de vouloir conntinuer ?"
     modalVisible={modalVisible} 
     onContinue={()=>setModalVisible(false)} 
     onCancel={()=>setModalVisible(false)}/>
 
-    <BottomSheetComponent title="Modifier la sous catégorie" isVisible={bottomVisible} onCancel={()=>setBottomVisible(false)} onSave={()=>{
+    <BottomSheetComponent title="Modifier la garniture" isVisible={bottomVisible} onCancel={()=>setBottomVisible(false)} onSave={()=>{
         setBottomVisible(false)
         }}>
                 <DisplayDetailsComponent title='NOM'value={item.categorie}/>
@@ -82,6 +82,6 @@ const DetailsSousCategoriePlat = ({route}:any) => {
   )
 }
 
-export default DetailsSousCategoriePlat
+export default DetailsGarnitures
 
 const styles = StyleSheet.create({})
