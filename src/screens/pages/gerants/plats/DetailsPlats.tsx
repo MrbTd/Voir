@@ -12,18 +12,26 @@ import HeaderYam from '../../../../components/HeaderYam';
 import CustomButton from '../../../../components/CustomButton';
 import {imageRessource, paletteColor} from '../../../../utils/Constantes';
 import {ScrollView} from 'react-native-gesture-handler';
-import BottomSheetComponent from '../../../../components/BottomSheetComponent';
 import ModalComponent from '../../../../components/ModalComponent';
 import DisplayDetailsComponent from '../../../../components/DisplayDetailsComponent';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useAppDispatch} from '../../../../hooks/dispatchSelector';
+import {deletePlat} from '../../../../reducers/gerant/reducerPlat';
+import ModifierPlats from './ModifierPlats';
 
 const DetailsPlats = ({route}: any) => {
   const item = route.params;
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [bottomVisible, setBottomVisible] = useState(false);
+  const dispatch = useAppDispatch();
 
+  const handleDelete = () => {
+    dispatch(deletePlat(item?.id, navigation));
+    setModalVisible(false);
+    console.log('clique');
+  };
   return (
     <View style={{height: Dimensions.get('screen').height}}>
       <HeaderYam
@@ -53,17 +61,14 @@ const DetailsPlats = ({route}: any) => {
           disabled={true}
           borderRadius={0}
         />
-        <DisplayDetailsComponent title="NOM" value={item.categorie} />
+        <DisplayDetailsComponent title="DESIGNATION" value={item.name} />
         <DisplayDetailsComponent title="DESCRIPTION" value={item.description} />
+        <DisplayDetailsComponent title="CATEGORIE" value={item.category_name} />
         <DisplayDetailsComponent
-          title="SOUS-CATEGORIE"
-          value={item.souscategorie}
+          title="PRIX MOYEN"
+          value={`${item.prix} FCFA`}
         />
-        <DisplayDetailsComponent title="PRIX MOYEN" value={item.prixm} />
-        <DisplayDetailsComponent
-          title="ALLERGENES COURANTS"
-          value={item.allegerne}
-        />
+
         <DisplayDetailsComponent
           title="PHOTO"
           img={true}
@@ -108,10 +113,10 @@ const DetailsPlats = ({route}: any) => {
         title="SUPPRESSION DU Plats"
         subtitle="Attention, vous êtes sur le point de supprimer un Plats. Etes vous sûr de vouloir conntinuer ?"
         modalVisible={modalVisible}
-        onContinue={() => setModalVisible(false)}
+        onContinue={handleDelete}
         onCancel={() => setModalVisible(false)}
       />
-
+      {/* 
       <BottomSheetComponent
         title="Modifier le plats"
         isVisible={bottomVisible}
@@ -147,7 +152,13 @@ const DetailsPlats = ({route}: any) => {
             </View>
           }
         />
-      </BottomSheetComponent>
+      </BottomSheetComponent> */}
+
+      <ModifierPlats
+        bottomVisible={bottomVisible}
+        setBottomVisible={setBottomVisible}
+        item={item}
+      />
     </View>
   );
 };

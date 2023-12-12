@@ -6,16 +6,28 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import BodyGerant from '../../../../components/BodyGerant';
 import CustomText from '../../../../components/CustomText';
-import {paletteColor} from '../../../../utils/Constantes';
+import {formaDate, paletteColor} from '../../../../utils/Constantes';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {dataCommandeEncour} from '../../../../utils/mocs';
 import {useNavigation} from '@react-navigation/native';
+import {apiGetListCommandeGerant} from '../../../../services/apiService';
 
 const CommandeJours = () => {
   const navigation = useNavigation();
+  const [dataCommande, setDataCommande] = useState([]) as any;
+  const getData = () => {
+    apiGetListCommandeGerant()
+      .then(res => setDataCommande(res?.items))
+      .catch(err => console.log(err));
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <BodyGerant title="Commande journalières" isBtnAvis={false}>
       <View style={{flex: 1}}>
@@ -25,7 +37,7 @@ const CommandeJours = () => {
             marginTop: '8%',
           }}>
           <FlatList
-            data={dataCommandeEncour}
+            data={dataCommande}
             keyExtractor={item => item.id.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({item}) => (
@@ -45,20 +57,22 @@ const CommandeJours = () => {
                   }}>
                   <View>
                     <CustomText fontSize={17} fontWeight="600">
-                      Table n°{item.table}
+                      Table n°{item.table_id}
                     </CustomText>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <MaterialCommunityIcons name="clock-outline" />
-                      <CustomText textAlign="center">{item.heure}</CustomText>
+                      <CustomText textAlign="center">
+                        {formaDate(item.created_at)}
+                      </CustomText>
                     </View>
                   </View>
 
                   <View>
                     <CustomText fontSize={17} fontWeight="600">
-                      Commande n°{item.nombreCommande}
+                      Commande n°{item.table_id}
                     </CustomText>
                     <CustomText textAlign="center">
-                      {item.price} FCFA
+                      {item.montant_total} FCFA
                     </CustomText>
                   </View>
                 </View>

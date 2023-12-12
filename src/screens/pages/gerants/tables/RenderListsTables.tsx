@@ -7,6 +7,7 @@ import DisplayDetailsComponent from '../../../../components/DisplayDetailsCompon
 
 const RenderListTables = ({item}: any) => {
   const navigation = useNavigation();
+
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -25,7 +26,7 @@ const RenderListTables = ({item}: any) => {
       }>
       <View>
         <Image
-          source={imageRessource.salade}
+          source={imageRessource.table}
           style={{
             width: 90,
             height: 100,
@@ -42,10 +43,9 @@ const RenderListTables = ({item}: any) => {
           justifyContent: 'center',
           paddingHorizontal: '2%',
         }}>
-        <DisplayDetailsComponent title="ID" value={item.id} border={0} />
         <DisplayDetailsComponent
-          title="CATEGORIE"
-          value={item.categorie}
+          title="NUMERO DE TABLE"
+          value={item.numero_table}
           border={0}
         />
       </View>

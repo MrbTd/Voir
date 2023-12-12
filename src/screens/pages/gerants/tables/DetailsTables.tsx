@@ -17,12 +17,22 @@ import ModalComponent from '../../../../components/ModalComponent';
 import DisplayDetailsComponent from '../../../../components/DisplayDetailsComponent';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ModifierTables from './ModifierTables';
+import {useAppDispatch} from '../../../../hooks/dispatchSelector';
+import {deleteTable} from '../../../../reducers/gerant/reducerTable';
 
 const DetailsTables = ({route}: any) => {
   const item = route.params;
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [bottomVisible, setBottomVisible] = useState(false);
+  const dispatch = useAppDispatch();
+  const handleDelete = () => {
+    dispatch(deleteTable(item?.id, navigation));
+
+    setModalVisible(false);
+    console.log('clique');
+  };
 
   return (
     <View style={{height: Dimensions.get('screen').height}}>
@@ -53,17 +63,11 @@ const DetailsTables = ({route}: any) => {
           disabled={true}
           borderRadius={0}
         />
-        <DisplayDetailsComponent title="NOM" value={item.categorie} />
-        <DisplayDetailsComponent title="DESCRIPTION" value={item.description} />
         <DisplayDetailsComponent
-          title="SOUS-CATEGORIE"
-          value={item.souscategorie}
+          title="numero de table"
+          value={item.numero_table}
         />
-        <DisplayDetailsComponent title="PRIX MOYEN" value={item.prixm} />
-        <DisplayDetailsComponent
-          title="ALLERGENES COURANTS"
-          value={item.allegerne}
-        />
+
         <DisplayDetailsComponent
           title="PHOTO"
           img={true}
@@ -108,11 +112,11 @@ const DetailsTables = ({route}: any) => {
         title="SUPPRESSION DE LA TABLE"
         subtitle="Attention, vous êtes sur le point de supprimer une table. Etes vous sûr de vouloir conntinuer ?"
         modalVisible={modalVisible}
-        onContinue={() => setModalVisible(false)}
+        onContinue={handleDelete}
         onCancel={() => setModalVisible(false)}
       />
 
-      <BottomSheetComponent
+      {/*   <BottomSheetComponent
         title="Modifier la table"
         isVisible={bottomVisible}
         onCancel={() => setBottomVisible(false)}
@@ -147,7 +151,12 @@ const DetailsTables = ({route}: any) => {
             </View>
           }
         />
-      </BottomSheetComponent>
+      </BottomSheetComponent> */}
+      <ModifierTables
+        bottomVisible={bottomVisible}
+        setBottomVisible={setBottomVisible}
+        item={item}
+      />
     </View>
   );
 };

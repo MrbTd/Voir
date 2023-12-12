@@ -5,7 +5,7 @@ import {imageRessource, paletteColor} from '../../../../utils/Constantes';
 import CustomText from '../../../../components/CustomText';
 import DisplayDetailsComponent from '../../../../components/DisplayDetailsComponent';
 
-const RenderListSauces = ({item}: any) => {
+const RenderListBoissons = ({item}: any) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -21,7 +21,7 @@ const RenderListSauces = ({item}: any) => {
         backgroundColor: paletteColor.white,
       }}
       onPress={() =>
-        navigation.navigate({name: 'DetailsSauces', params: item} as never)
+        navigation.navigate({name: 'DetailsBoissons', params: item} as never)
       }>
       <View>
         <Image
@@ -44,8 +44,13 @@ const RenderListSauces = ({item}: any) => {
         }}>
         <DisplayDetailsComponent title="ID" value={item.id} border={0} />
         <DisplayDetailsComponent
-          title="CATEGORIE"
-          value={item.categorie}
+          title="DESIGNATION"
+          value={item.designation}
+          border={0}
+        />
+        <DisplayDetailsComponent
+          title="PRIX"
+          value={`${item.prix} FCFA`}
           border={0}
         />
       </View>
@@ -53,6 +58,6 @@ const RenderListSauces = ({item}: any) => {
   );
 };
 
-export default RenderListSauces;
+export default RenderListBoissons;
 
 const styles = StyleSheet.create({});

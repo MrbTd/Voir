@@ -10,8 +10,8 @@ import CategoriePlat from '../pages/gerants/categories_plats/CategoriePlat';
 import DetailsCategoriePlat from '../pages/gerants/categories_plats/DetailsCategoriePlat';
 import SousCategoriePlat from '../pages/gerants/sousCategories/SousCategoriePlat';
 import DetailsSousCategoriePlat from '../pages/gerants/sousCategories/DetailsSousCategoriePlat';
-import Garnitures from '../pages/gerants/garnitures/Garnitures';
-import DetailsGarnitures from '../pages/gerants/garnitures/DetailsGarnitures';
+import Boissons from '../pages/gerants/boissons/Boissons';
+import DetailsBoissons from '../pages/gerants/boissons/DetailsBoissons';
 import Accompagnement from '../pages/gerants/accompagnements/Accompagnement';
 import DetailsAccompagnement from '../pages/gerants/accompagnements/DetailsAccompagnement';
 import Sauces from '../pages/gerants/sauces/Sauces';
@@ -20,9 +20,9 @@ import Tables from '../pages/gerants/tables/Tables';
 import DetailsTables from '../pages/gerants/tables/DetailsTables';
 import Plats from '../pages/gerants/plats/Plats';
 import DetailsPlats from '../pages/gerants/plats/DetailsPlats';
-import AvisClients from '../pages/gerants/AvisClients';
 import CommandeJours from '../pages/gerants/commande_jours/CommandeJours';
 import AccueilGerant from '../pages/gerants/accueil_gerant/AccueilGerant';
+import AvisClients from '../pages/gerants/avis_clients/AvisClients';
 
 const Stack = createStackNavigator();
 
@@ -63,11 +63,11 @@ const StackHomeGerant = () => {
         }}
       />
 
-      <Stack.Screen name="Garnitures" component={Garnitures} />
+      <Stack.Screen name="Boissons" component={Boissons} />
 
       <Stack.Screen
-        name="DetailsGarnitures"
-        component={DetailsGarnitures}
+        name="DetailsBoissons"
+        component={DetailsBoissons}
         options={{
           cardStyleInterpolator:
             CardStyleInterpolators.forFadeFromBottomAndroid,

@@ -1,38 +1,39 @@
-import {StyleSheet, Dimensions, View } from 'react-native'
-import React, { useState } from 'react'
-import { FlatList } from 'react-native-gesture-handler'
-import { dataCategoriePlat, dataUsers } from '../../../../utils/mocs'
-import { useNavigation } from '@react-navigation/native'
-import BodyGerant from '../../../../components/BodyGerant'
-import RenderListSousCategoriePlat from './RenderListSousCategoriePlat'
-import AjouterSousCategoriePlats from './AjouterSousCategoriePlats'
+import {StyleSheet, Dimensions, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {FlatList} from 'react-native-gesture-handler';
+
+import BodyGerant from '../../../../components/BodyGerant';
+import RenderListSousCategoriePlat from './RenderListSousCategoriePlat';
+import AjouterSousCategoriePlats from './AjouterSousCategoriePlats';
+import {useAppSelector} from '../../../../hooks/dispatchSelector';
+import LoadingModal from '../../../../components/LoadingModal';
 
 const SousCategoriePlat = () => {
-  const [bottomVisible,setBottomVisible]=useState(false)
-
-    const navigation=useNavigation()
+  const [bottomVisible, setBottomVisible] = useState(false);
+  const {dataSousCat, isLoadingSousCat} = useAppSelector(
+    state => state.sousCatGerant,
+  );
 
   return (
-   <BodyGerant title='Sous-catégories' onPress={()=>setBottomVisible(true)}>
-     <View style={{height:Dimensions.get("screen").height}}>
+    <BodyGerant title="Sous-catégories" onPress={() => setBottomVisible(true)}>
+      <View style={{height: Dimensions.get('screen').height}}>
         <FlatList
-        data={dataCategoriePlat}
-        keyExtractor={item=>item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom:300}}
-        renderItem={({item})=> ( <RenderListSousCategoriePlat item={item} />)}
-        /> 
-        
-    </View>
-    <AjouterSousCategoriePlats isVisible={bottomVisible} 
-    onCancel={()=>setBottomVisible(false)} 
-    onSave={()=>{
-        setBottomVisible(false)
-        }}/>
-   </BodyGerant>
-  )
-}
+          data={dataSousCat}
+          keyExtractor={(item: any) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: 300}}
+          renderItem={({item}) => <RenderListSousCategoriePlat item={item} />}
+        />
+      </View>
+      <AjouterSousCategoriePlats
+        bottomVisible={bottomVisible}
+        setBottomVisible={setBottomVisible}
+      />
+      <LoadingModal visible={isLoadingSousCat} />
+    </BodyGerant>
+  );
+};
 
-export default SousCategoriePlat
+export default SousCategoriePlat;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

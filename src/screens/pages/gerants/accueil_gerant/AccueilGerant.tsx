@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {imageRessource, paletteColor} from '../../../../utils/Constantes';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,9 +7,37 @@ import CustomText from '../../../../components/CustomText';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import CustomButton from '../../../../components/CustomButton';
+import {useAuth} from '../../../../hooks/AuthProvider';
+import {
+  actionReducer,
+  actionTypeReducer,
+} from '../../../../contexts/reducers/actionReducer';
+import {asyncRemoveGetToken} from '../../../../services/asyncStorage';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../hooks/dispatchSelector';
+import {initializeSousCategorie} from '../../../../reducers/gerant/reducerSousCategorie';
+import {initializeCategoriePlat} from '../../../../reducers/gerant/reducerCategoriePlat';
+import {initializeBoisson} from '../../../../reducers/gerant/reducerBoisson';
+import {initializePlat} from '../../../../reducers/gerant/reducerPlat';
+import {initializeTable} from '../../../../reducers/gerant/reducerTable';
+import {initializeUtilisateur} from '../../../../reducers/gerant/reducerUtilisateur';
 
 const AccueilGerant = () => {
   const navigation = useNavigation();
+  const {dispatchAuhtContext} = useAuth();
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(initializeSousCategorie());
+    dispatch(initializeCategoriePlat());
+    dispatch(initializeBoisson());
+    dispatch(initializePlat());
+    dispatch(initializeTable());
+    dispatch(initializeUtilisateur());
+  }, []);
+
   return (
     <View style={{flex: 1}}>
       <LinearGradient
@@ -34,7 +62,7 @@ const AccueilGerant = () => {
             style={{width: 50, height: 50, borderRadius: 100}}
           />
           <CustomText color={paletteColor.white} fontSize={18}>
-            Toure Ben Daouda
+            YamBouffe
           </CustomText>
           <MaterialIcons
             name="menu"
@@ -89,7 +117,13 @@ const AccueilGerant = () => {
             />
           </View>
           <View style={{width: '45%'}}>
-            <CustomButton label="Deconnexion" />
+            <CustomButton
+              label="Deconnexion"
+              onPress={() => {
+                dispatchAuhtContext(actionReducer(actionTypeReducer.SIGN_OUT));
+                asyncRemoveGetToken();
+              }}
+            />
           </View>
         </View>
         <View />

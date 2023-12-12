@@ -7,6 +7,7 @@ import DisplayDetailsComponent from '../../../../components/DisplayDetailsCompon
 
 const RenderListPlats = ({item}: any) => {
   const navigation = useNavigation();
+
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -42,10 +43,19 @@ const RenderListPlats = ({item}: any) => {
           justifyContent: 'center',
           paddingHorizontal: '2%',
         }}>
-        <DisplayDetailsComponent title="ID" value={item.id} border={0} />
+        <DisplayDetailsComponent
+          title="DESIGNATION"
+          value={item.name}
+          border={0}
+        />
         <DisplayDetailsComponent
           title="CATEGORIE"
-          value={item.categorie}
+          value={item.category_name}
+          border={0}
+        />
+        <DisplayDetailsComponent
+          title="PRIX"
+          value={`${item.prix} FCFA`}
           border={0}
         />
       </View>

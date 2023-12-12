@@ -5,61 +5,78 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import BottomSheetComponent from '../../../../components/BottomSheetComponent';
-import {imageRessource, paletteColor} from '../../../../utils/Constantes';
+import {
+  imageRessource,
+  paletteColor,
+  showToast,
+} from '../../../../utils/Constantes';
 import CustomText from '../../../../components/CustomText';
+import {useAppDispatch} from '../../../../hooks/dispatchSelector';
+import {useNavigation} from '@react-navigation/native';
+import {createTable} from '../../../../reducers/gerant/reducerTable';
 
 interface AjouterTablesProps {
-  isVisible: boolean | undefined;
-  onCancel: ((params: any) => any) | undefined;
-  onSave: ((params: any) => any) | undefined;
+  bottomVisible: boolean | undefined;
+  setBottomVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AjouterTables = ({onCancel, onSave, isVisible}: AjouterTablesProps) => {
+const AjouterTables = ({
+  bottomVisible,
+  setBottomVisible,
+}: AjouterTablesProps) => {
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation();
+  const [numeroTable, setNumeroTable] = useState('');
+  const [emplacement, setEmplacement] = useState('');
+
+  const handleSubmit = async () => {
+    const data = {
+      numero_table: numeroTable,
+      emplacement,
+    };
+    if (!handleError()) {
+      dispatch(createTable(data, navigation));
+    }
+    resetState();
+    setBottomVisible(false);
+  };
+  const resetState = () => {
+    setNumeroTable('');
+    setEmplacement('');
+  };
+  const handleError = () => {
+    if (!numeroTable || !emplacement) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <BottomSheetComponent
       title="Ajouter une table"
-      isVisible={isVisible}
-      onCancel={onCancel}
-      onSave={onSave}
+      isVisible={bottomVisible}
+      onCancel={() => setBottomVisible(false)}
+      onSave={
+        handleError()
+          ? () => showToast('veuillez remplir tous les champs svp !')
+          : handleSubmit
+      }
       btnTitle="Ajouter">
       <TextInput
-        placeholder="NOM:"
+        placeholder="NUMERO DE TABLE:"
         style={{borderBottomWidth: 0.5}}
         placeholderTextColor={paletteColor.marron}
+        onChangeText={e => setNumeroTable(e)}
       />
       <TextInput
-        placeholder="DESCRIPTION:"
+        placeholder="EMPLACEMENT:"
         style={{borderBottomWidth: 0.5}}
         placeholderTextColor={paletteColor.marron}
+        onChangeText={e => setEmplacement(e)}
       />
-      <TextInput
-        placeholder="CATEGORIE PARENT:"
-        style={{borderBottomWidth: 0.5}}
-        placeholderTextColor={paletteColor.marron}
-      />
-      <TextInput
-        placeholder="PRIX MOYEN:"
-        style={{borderBottomWidth: 0.5}}
-        placeholderTextColor={paletteColor.marron}
-      />
-      <View style={{flexDirection: 'row', width: '80%', alignItems: 'center'}}>
-        <CustomText fontSize={14} color={paletteColor.marron}>
-          PHOTO :{' '}
-        </CustomText>
-        <TouchableOpacity onPress={() => {}}>
-          <Image
-            source={imageRessource.upload}
-            style={{
-              width: 40,
-              height: 40,
-              resizeMode: 'cover',
-              borderRadius: 8,
-            }}
-          />
-        </TouchableOpacity>
-      </View>
     </BottomSheetComponent>
   );
 };

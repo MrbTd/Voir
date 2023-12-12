@@ -15,16 +15,23 @@ import CustomButton from '../../components/CustomButton';
 import CustomText from '../../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {dataCommandeEncour} from '../../utils/mocs';
+import {userRole} from '../../utils/data';
+import {useAuth} from '../../hooks/AuthProvider';
+import {
+  actionReducer,
+  actionTypeReducer,
+} from '../../contexts/reducers/actionReducer';
 
 const ListCommande = () => {
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
-  let status = 'cuisines';
+  const {auhtContext, dispatchAuhtContext} = useAuth();
+
   return (
     <View style={{flex: 1}}>
       <View>
         <ImageBackground source={imageRessource.pattern} style={{height: 200}}>
-          {status !== 'cuisine' && (
+          {auhtContext.data.role !== userRole.CUISINIER && (
             <View
               style={{
                 flexDirection: 'row',
@@ -54,7 +61,7 @@ const ListCommande = () => {
               </CustomText>
             </View>
           )}
-          {status == 'cuisine' && (
+          {auhtContext.data.role === userRole.CUISINIER && (
             <View
               style={{
                 flexDirection: 'row',
@@ -76,7 +83,10 @@ const ListCommande = () => {
                 />
                 <CustomText marginLeft={5}>Toure Ben Daouda</CustomText>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  dispatchAuhtContext(actionReducer(actionTypeReducer.SIGN_OUT))
+                }>
                 <Image
                   source={imageRessource.deconnexion}
                   style={{width: 50, height: 50, borderRadius: 100}}
@@ -85,7 +95,7 @@ const ListCommande = () => {
             </View>
           )}
         </ImageBackground>
-        {status == 'cuisine' && (
+        {auhtContext.data.role === userRole.CUISINIER && (
           <View
             style={{
               position: 'absolute',
@@ -106,7 +116,7 @@ const ListCommande = () => {
           </View>
         )}
 
-        {status !== 'cuisine' && (
+        {auhtContext.data.role !== userRole.CUISINIER && (
           <View
             style={{
               flexDirection: 'row',

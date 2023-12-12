@@ -3,14 +3,12 @@ import React from 'react';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
 import CustomText from '../../components/CustomText';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
-import {imageRessource} from '../../utils/Constantes';
+
+import {imageRessource, paletteColor} from '../../utils/Constantes';
 
 const DrawerContent = (props: any) => {
   const navigation = useNavigation();
+
   return (
     <DrawerContentScrollView>
       <TouchableOpacity
@@ -29,42 +27,33 @@ const DrawerContent = (props: any) => {
       </TouchableOpacity>
       <View style={styles.elementDrawer}>
         <DrawerItem
-          label={() => <CustomText>Utilisateur</CustomText>}
-          onPress={() => navigation.navigate('ListUtilisateur' as never)}
+          label={params => <CustomText>Utilisateur</CustomText>}
+          onPress={() => navigation.navigate('StackUser' as never)}
+          activeBackgroundColor={paletteColor.red}
         />
 
         <DrawerItem
           label={() => <CustomText>Catégories des plats</CustomText>}
-          onPress={() => navigation.navigate('CategoriePlat' as never)}
+          onPress={() => navigation.navigate('StackCategoriePlat' as never)}
         />
         <DrawerItem
           label={() => <CustomText>Sous-catégories</CustomText>}
-          onPress={() => navigation.navigate('SousCategoriePlat' as never)}
+          onPress={() => navigation.navigate('StacSousCategoriePlat' as never)}
         />
 
         <DrawerItem
-          label={() => <CustomText>Garnitures</CustomText>}
-          onPress={() => navigation.navigate('Garnitures' as never)}
-        />
-
-        <DrawerItem
-          label={() => <CustomText>Accompagnements</CustomText>}
-          onPress={() => navigation.navigate('Accompagnement' as never)}
-        />
-
-        <DrawerItem
-          label={() => <CustomText>Sauces</CustomText>}
-          onPress={() => navigation.navigate('Sauces' as never)}
+          label={() => <CustomText>Boissons</CustomText>}
+          onPress={() => navigation.navigate('StackBoissons' as never)}
         />
 
         <DrawerItem
           label={() => <CustomText>Tables</CustomText>}
-          onPress={() => navigation.navigate('Tables' as never)}
+          onPress={() => navigation.navigate('StackTables' as never)}
         />
 
         <DrawerItem
           label={() => <CustomText>Plats</CustomText>}
-          onPress={() => navigation.navigate('Plats' as never)}
+          onPress={() => navigation.navigate('StackPlats' as never)}
         />
         <DrawerItem
           label={() => <CustomText>Avis clients</CustomText>}

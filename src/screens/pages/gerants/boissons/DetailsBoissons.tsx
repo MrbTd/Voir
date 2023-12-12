@@ -17,12 +17,23 @@ import ModalComponent from '../../../../components/ModalComponent';
 import DisplayDetailsComponent from '../../../../components/DisplayDetailsComponent';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ModifierBoissons from './ModifierBoissons';
+import {deleteBoisson} from '../../../../reducers/gerant/reducerBoisson';
+import {useAppDispatch} from '../../../../hooks/dispatchSelector';
 
-const DetailsAccompagnement = ({route}: any) => {
+const DetailsBoissons = ({route}: any) => {
   const item = route.params;
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [bottomVisible, setBottomVisible] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleDelete = () => {
+    dispatch(deleteBoisson(item?.id, navigation));
+
+    setModalVisible(false);
+    console.log('clique');
+  };
 
   return (
     <View style={{height: Dimensions.get('screen').height}}>
@@ -45,7 +56,7 @@ const DetailsAccompagnement = ({route}: any) => {
         showsVerticalScrollIndicator={false}>
         <CustomButton
           backgroundColor={paletteColor.marron}
-          label="Détails accompagnement"
+          label="Détails boisson"
           marginTop={10}
           colorText={paletteColor.white}
           fontSize={20}
@@ -53,17 +64,11 @@ const DetailsAccompagnement = ({route}: any) => {
           disabled={true}
           borderRadius={0}
         />
-        <DisplayDetailsComponent title="NOM" value={item.categorie} />
+        <DisplayDetailsComponent title="NOM" value={item.designation} />
         <DisplayDetailsComponent title="DESCRIPTION" value={item.description} />
-        <DisplayDetailsComponent
-          title="SOUS-CATEGORIE"
-          value={item.souscategorie}
-        />
-        <DisplayDetailsComponent title="PRIX MOYEN" value={item.prixm} />
-        <DisplayDetailsComponent
-          title="ALLERGENES COURANTS"
-          value={item.allegerne}
-        />
+
+        <DisplayDetailsComponent title="PRIX" value={`${item.prix} FCFA`} />
+
         <DisplayDetailsComponent
           title="PHOTO"
           img={true}
@@ -97,7 +102,7 @@ const DetailsAccompagnement = ({route}: any) => {
           </View>
           <View style={{width: '45%'}}>
             <CustomButton
-              label="Supprimer l'accompagnement"
+              label="Supprimer la boisson"
               onPress={() => setModalVisible(!modalVisible)}
             />
           </View>
@@ -105,15 +110,15 @@ const DetailsAccompagnement = ({route}: any) => {
       </ScrollView>
 
       <ModalComponent
-        title="SUPPRESSION DE L'ACCOMPAGNEMENT"
-        subtitle="Attention, vous êtes sur le point de supprimer un accompagnement. Etes vous sûr de vouloir conntinuer ?"
+        title="SUPPRESSION DE LA GARNITURE"
+        subtitle="Attention, vous êtes sur le point de supprimer une boisson. Etes vous sûr de vouloir conntinuer ?"
         modalVisible={modalVisible}
-        onContinue={() => setModalVisible(false)}
+        onContinue={handleDelete}
         onCancel={() => setModalVisible(false)}
       />
 
-      <BottomSheetComponent
-        title="Modifier l'accompagnement"
+      {/*  <BottomSheetComponent
+        title="Modifier la boisson"
         isVisible={bottomVisible}
         onCancel={() => setBottomVisible(false)}
         onSave={() => {
@@ -147,11 +152,16 @@ const DetailsAccompagnement = ({route}: any) => {
             </View>
           }
         />
-      </BottomSheetComponent>
+      </BottomSheetComponent> */}
+      <ModifierBoissons
+        bottomVisible={bottomVisible}
+        setBottomVisible={setBottomVisible}
+        item={item}
+      />
     </View>
   );
 };
 
-export default DetailsAccompagnement;
+export default DetailsBoissons;
 
 const styles = StyleSheet.create({});

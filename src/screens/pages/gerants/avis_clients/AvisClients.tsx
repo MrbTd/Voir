@@ -1,9 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import BodyGerant from '../../../components/BodyGerant';
-import CustomText from '../../../components/CustomText';
-import {paletteColor} from '../../../utils/Constantes';
+
 import * as Progress from 'react-native-progress';
+import BodyGerant from '../../../../components/BodyGerant';
+import {paletteColor} from '../../../../utils/Constantes';
+import CustomText from '../../../../components/CustomText';
 
 const AvisClients = () => {
   return (
