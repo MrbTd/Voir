@@ -74,7 +74,7 @@ const DetailsTables = ({route}: any) => {
           value={
             <View>
               <Image
-                source={imageRessource.eat}
+                source={imageRessource.table}
                 style={{
                   width: 50,
                   height: 50,

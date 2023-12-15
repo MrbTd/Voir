@@ -10,6 +10,7 @@ import ListCommande from '../pages/ListCommande';
 import ListMesCommande from '../pages/ListeMesCommande';
 import {useAuth} from '../../hooks/AuthProvider';
 import {userRole} from '../../utils/data';
+import RecapitulatifCommande from '../pages/RecapitulatifCommande';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,15 @@ const StackHome = () => {
       <Stack.Screen
         name="DetailsCommande"
         component={DetailsCommande}
+        options={{
+          cardStyleInterpolator:
+            CardStyleInterpolators.forFadeFromBottomAndroid,
+        }}
+      />
+
+      <Stack.Screen
+        name="RecapitulatifCommande"
+        component={RecapitulatifCommande}
         options={{
           cardStyleInterpolator:
             CardStyleInterpolators.forFadeFromBottomAndroid,

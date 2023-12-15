@@ -1,12 +1,36 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import * as Progress from 'react-native-progress';
 import BodyGerant from '../../../../components/BodyGerant';
 import {paletteColor} from '../../../../utils/Constantes';
 import CustomText from '../../../../components/CustomText';
+import {apiGetAvis} from '../../../../services/apiService';
 
 const AvisClients = () => {
+  const [dataAvis, setDataAvis] = useState<any[]>([]);
+  const [noteResto, setNoteResto] = useState<any[]>([]);
+
+  const getData = () => {
+    apiGetAvis()
+      .then(res => setDataAvis(res?.items))
+      .catch(err => console.error(err));
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const noteRestaurantValues = dataAvis
+    ?.map(entry => entry.note_restaurant)
+    ?.filter(value => value !== null && value !== undefined);
+
+  const moyenneNoteRestaurant =
+    noteRestaurantValues?.reduce((sum, value) => sum + value, 0) /
+    noteRestaurantValues?.length;
+
+  console.log(JSON.stringify(dataAvis, null, 2));
+
   return (
     <BodyGerant title="Avis clients" isBtnAvis={false}>
       <View style={{marginHorizontal: '5%', marginVertical: '8%'}}>
@@ -22,10 +46,12 @@ const AvisClients = () => {
             style={{flexDirection: 'row', alignItems: 'center', columnGap: 15}}>
             <View>
               <CustomText
-                fontWeight="bold"
+                textAlign="center"
                 color={paletteColor.white}
                 fontSize={35}>
-                3.08
+                {!isNaN(moyenneNoteRestaurant)
+                  ? moyenneNoteRestaurant.toFixed(2)
+                  : 0}
               </CustomText>
               <CustomText color={paletteColor.white} fontSize={10}>
                 Moyenne de notation
@@ -56,6 +82,7 @@ const AvisClients = () => {
                 />
                 <CustomText color={paletteColor.white}>30</CustomText>
               </View>
+
               <View
                 style={{
                   flexDirection: 'row',
@@ -80,6 +107,7 @@ const AvisClients = () => {
                 />
                 <CustomText color={paletteColor.white}>30</CustomText>
               </View>
+
               <View
                 style={{
                   flexDirection: 'row',
@@ -104,6 +132,7 @@ const AvisClients = () => {
                 />
                 <CustomText color={paletteColor.white}>30</CustomText>
               </View>
+
               <View
                 style={{
                   flexDirection: 'row',

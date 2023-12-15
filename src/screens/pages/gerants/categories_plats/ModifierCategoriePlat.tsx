@@ -13,26 +13,28 @@ import {
   showToast,
 } from '../../../../utils/Constantes';
 import CustomText from '../../../../components/CustomText';
-import {useAppDispatch} from '../../../../hooks/dispatchSelector';
-import {useNavigation} from '@react-navigation/native';
-import {createCategoriePlat} from '../../../../reducers/gerant/reducerCategoriePlat';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DocumentPicker from 'react-native-document-picker';
+import {useAppDispatch} from '../../../../hooks/dispatchSelector';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
+import {updateCategoriePlat} from '../../../../reducers/gerant/reducerCategoriePlat';
 
-interface AjouterCategoriePlatsProps {
+interface ModifierBoissonsProps {
   bottomVisible: boolean | undefined;
   setBottomVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  item: any;
 }
 
-const AjouterCategoriePlats = ({
+const ModifierCategoriePlat = ({
   bottomVisible,
   setBottomVisible,
-}: AjouterCategoriePlatsProps) => {
+  item,
+}: ModifierBoissonsProps) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const formData = new FormData();
-  const [designation, setDesignation] = useState('');
-  const [filePicture, setFilePicture] = useState(null) as any;
+  const [designation, setDesignation] = useState(item?.designation);
+  const [filePicture, setFilePicture] = useState(item?.image) as any;
 
   const handleSubmit = async () => {
     const picture = {
@@ -46,7 +48,7 @@ const AjouterCategoriePlats = ({
     formData.append('image', picture);
 
     if (!handleError()) {
-      dispatch(createCategoriePlat(formData, navigation));
+      dispatch(updateCategoriePlat(item?.id, formData, navigation));
     }
     resetState();
     setBottomVisible(false);
@@ -65,9 +67,10 @@ const AjouterCategoriePlats = ({
 
     setFilePicture(null);
   };
+
   return (
     <BottomSheetComponent
-      title="Ajouter une catégorie"
+      title="Modifier une catégorie"
       isVisible={bottomVisible}
       onCancel={() => setBottomVisible(false)}
       onSave={
@@ -75,12 +78,13 @@ const AjouterCategoriePlats = ({
           ? () => showToast('veuillez remplir tous les champs svp !')
           : handleSubmit
       }
-      btnTitle="Ajouter">
+      btnTitle="Modifier">
       <TextInput
         placeholder="Designation:"
         style={{borderBottomWidth: 0.5}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setDesignation(e)}
+        defaultValue={designation}
       />
 
       <View
@@ -120,6 +124,6 @@ const AjouterCategoriePlats = ({
   );
 };
 
-export default AjouterCategoriePlats;
+export default ModifierCategoriePlat;
 
 const styles = StyleSheet.create({});

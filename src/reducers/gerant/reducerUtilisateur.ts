@@ -4,6 +4,7 @@ import {
   apiDeletetUtilisateur,
   apiGetUtilisateur,
   apiRegisterUtilisateur,
+  apiUpdateUtilisateur,
 } from '../../services/apiService';
 import {statusCode} from '../../utils/data';
 import {showToast} from '../../utils/Constantes';
@@ -59,12 +60,14 @@ export const createUtilisateur = (
       const res = await apiRegisterUtilisateur(formData);
 
       if (res?.status_code == statusCode.SUCESS) {
-        dispatch(isLoadingStateSave(false));
         showToast('le compte a bien été crée');
         const result = await apiGetUtilisateur();
         dispatch(getUtilisateurs(result?.items));
         navigation.navigate('ListUtilisateur' as never);
+      } else {
+        console.log('err create user', res);
       }
+      dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
@@ -83,12 +86,41 @@ export const deleteUtilisateur = (
       const res = await apiDeletetUtilisateur(id);
 
       if (res?.status_code == statusCode.SUCESS) {
-        dispatch(isLoadingStateSave(false));
         showToast('le compte a bien été suprimé');
         const result = await apiGetUtilisateur();
         dispatch(getUtilisateurs(result?.items));
         navigation.navigate('ListUtilisateur' as never);
+      } else {
+        console.log('err delete user', res);
       }
+      dispatch(isLoadingStateSave(false));
+    } catch (error) {
+      console.log('error', error);
+      dispatch(isLoadingStateSave(false));
+    }
+  };
+};
+
+export const updateUtilisateur = (
+  id: string,
+  data: any,
+  navigation: NavigationProp<ReactNavigation.RootParamList>,
+) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(isLoadingStateSave(true));
+
+    try {
+      const res = await apiUpdateUtilisateur(id, data);
+
+      if (res?.status_code == statusCode.SUCESS) {
+        showToast('le compte a bien été modifié');
+        const result = await apiGetUtilisateur();
+        dispatch(getUtilisateurs(result?.items));
+        navigation.navigate('ListUtilisateur' as never);
+      } else {
+        console.log('err delete user', res);
+      }
+      dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));

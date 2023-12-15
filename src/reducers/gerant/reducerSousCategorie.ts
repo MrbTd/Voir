@@ -8,6 +8,7 @@ import {
   apiDeletetSousCategorie,
   apiGetSousCategorie,
   apiRegisterSousCategorie,
+  apiUpdateSousCategorie,
 } from '../../services/apiService';
 
 const initialState = {
@@ -60,12 +61,12 @@ export const createSousCategorie = (
     try {
       const res = await apiRegisterSousCategorie(formData);
       if (res?.status_code == statusCode.SUCESS) {
-        dispatch(isLoadingStateSave(false));
         showToast('la Sous CategoriePlat a bien été crée');
         const result = await apiGetSousCategorie();
         dispatch(getSousCategories(result?.items));
         navigation.navigate('SousCategoriePlat' as never);
       }
+      dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
@@ -84,12 +85,42 @@ export const deleteSousCategorie = (
       const res = await apiDeletetSousCategorie(id);
 
       if (res?.status_code == statusCode.SUCESS) {
-        dispatch(isLoadingStateSave(false));
         showToast('la Sous CategoriePlat  a bien été suprimé');
         const result = await apiGetSousCategorie();
         dispatch(getSousCategories(result?.items));
         navigation.navigate('SousCategoriePlat' as never);
       }
+      dispatch(isLoadingStateSave(false));
+    } catch (error) {
+      console.log('error', error);
+      dispatch(isLoadingStateSave(false));
+    }
+  };
+};
+
+export const updateSousCategorie = (
+  id: string,
+  data: any,
+  navigation: NavigationProp<ReactNavigation.RootParamList>,
+) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(isLoadingStateSave(true));
+
+    try {
+      const res = await apiUpdateSousCategorie(id, data);
+
+      if (res?.status_code == statusCode.SUCESS) {
+        showToast('la sous categorie a bien été modifié');
+        const result = await apiGetSousCategorie();
+        console.log('=======================result=============');
+        console.log(result);
+        console.log('====================================');
+        dispatch(getSousCategories(result?.items));
+        navigation.navigate('SousCategoriePlat' as never);
+      } else {
+        console.log('err  SousCategoriePlat', res);
+      }
+      dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));

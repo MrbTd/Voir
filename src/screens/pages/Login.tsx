@@ -68,9 +68,6 @@ const Login = () => {
           }),
         );
 
-        console.log('====================================');
-        console.log(res.user);
-        console.log('====================================');
         setIsLoading(false);
       } else {
         console.log(res);

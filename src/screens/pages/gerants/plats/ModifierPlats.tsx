@@ -22,6 +22,7 @@ import {
 } from '../../../../hooks/dispatchSelector';
 import {createSousCategorie} from '../../../../reducers/gerant/reducerSousCategorie';
 import {useNavigation} from '@react-navigation/native';
+import {updatePlat} from '../../../../reducers/gerant/reducerPlat';
 
 interface ModifierPlatsPlatsProps {
   bottomVisible: boolean | undefined;
@@ -34,14 +35,17 @@ const ModifierPlats = ({
   setBottomVisible,
   item,
 }: ModifierPlatsPlatsProps) => {
-  const [filePicture, setFilePicture] = useState(null) as any;
-  const [name, setName] = useState('');
-  const [catPlat, setCatPlat] = useState('');
-  const [platCatData, setPlatCatData] = useState([]) as any;
+  const [filePicture, setFilePicture] = useState(item?.image) as any;
+  const [designation, setDesignation] = useState(item?.name);
+  const [description, setDescription] = useState(item?.description);
+  const [prix, setPrix] = useState(item?.prix);
+  const [sousCatPlat, setSousCatPlat] = useState(item?.category_name);
+  const [platSousCatData, setPlatSousCatData] = useState([]) as any;
   const formData = new FormData();
-  const {dataCatPlat} = useAppSelector(state => state.catPlaGerant);
+  const {dataSousCat} = useAppSelector(state => state.sousCatGerant);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
+
   const handleSubmit = async () => {
     const picture = {
       uri: filePicture?.uri,
@@ -49,25 +53,29 @@ const ModifierPlats = ({
       name: filePicture?.name,
     };
 
-    formData.append('name', name);
+    formData.append('name', designation);
+    formData.append('description', description);
+    formData.append('prix', prix);
     formData.append('image', picture);
-    formData.append('cat', catPlat);
+    formData.append('category_name', sousCatPlat);
 
     if (!handleError()) {
-      dispatch(createSousCategorie(formData, navigation));
+      dispatch(updatePlat(item?.id, formData, navigation));
     }
     resetState();
     setBottomVisible(false);
   };
 
   const resetState = () => {
-    setName('');
-    setCatPlat('');
+    setDesignation('');
+    setDescription('');
+    setPrix('');
+    setSousCatPlat('');
     setFilePicture(null);
   };
 
   const handleError = () => {
-    if (!name || !filePicture || !catPlat) {
+    if (!designation || !filePicture || !description || !prix || !sousCatPlat) {
       return true;
     } else {
       return false;
@@ -75,18 +83,18 @@ const ModifierPlats = ({
   };
 
   useEffect(() => {
-    const data = dataCatPlat.map((item: any) => {
+    const data = dataSousCat.map((item: any) => {
       return {
-        key: item.designation,
-        value: item.designation,
+        key: item.name,
+        value: item.name,
       };
     });
-    setPlatCatData(data);
+    setPlatSousCatData(data);
   }, []);
 
   return (
     <BottomSheetComponent
-      title="Modifier la sous catégorie"
+      title="Modifier un plats"
       isVisible={bottomVisible}
       onCancel={() => setBottomVisible(false)}
       onSave={
@@ -96,17 +104,24 @@ const ModifierPlats = ({
       }
       btnTitle="Modifier">
       <TextInput
-        placeholder="NOM:"
+        placeholder="DESIGNATION:"
         style={{borderBottomWidth: 0.5}}
         placeholderTextColor={paletteColor.marron}
-        onChangeText={e => setName(e)}
+        onChangeText={e => setDesignation(e)}
+        defaultValue={designation}
       />
-
+      <TextInput
+        placeholder="DESCRIPTION:"
+        style={{borderBottomWidth: 0.5}}
+        placeholderTextColor={paletteColor.marron}
+        onChangeText={e => setDescription(e)}
+        defaultValue={description}
+      />
       <SelectList
         setSelected={(val: React.SetStateAction<string>) => {
-          setCatPlat(val);
+          setSousCatPlat(val);
         }}
-        data={platCatData}
+        data={platSousCatData}
         save="key"
         search={false}
         boxStyles={{
@@ -116,18 +131,25 @@ const ModifierPlats = ({
           borderBottomColor: paletteColor.red,
         }}
         defaultOption={{
-          key: 0,
-          value: 'CATEGORIE',
+          key: item.name,
+          value: item.name,
         }}
         inputStyles={{
           left: -15,
-          color: catPlat ? paletteColor.black : paletteColor.marron,
+          color: sousCatPlat ? paletteColor.black : paletteColor.marron,
         }}
         dropdownStyles={{
           backgroundColor: 'white',
         }}
       />
 
+      <TextInput
+        placeholder="PRIX:"
+        style={{borderBottomWidth: 0.5}}
+        placeholderTextColor={paletteColor.marron}
+        onChangeText={e => setPrix(e)}
+        defaultValue={`${prix}`}
+      />
       <View style={{flexDirection: 'row', width: '80%', alignItems: 'center'}}>
         <CustomText fontSize={14} color={paletteColor.marron}>
           PHOTO :{' '}

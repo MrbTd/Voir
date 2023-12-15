@@ -18,6 +18,7 @@ import {apiGetListCommandeGerant} from '../../../../services/apiService';
 const CommandeJours = () => {
   const navigation = useNavigation();
   const [dataCommande, setDataCommande] = useState([]) as any;
+
   const getData = () => {
     apiGetListCommandeGerant()
       .then(res => setDataCommande(res?.items))

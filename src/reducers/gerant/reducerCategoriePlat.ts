@@ -4,6 +4,7 @@ import {
   apiDeletetCategoriePlat,
   apiGetCategoriePlat,
   apiRegisterCategoriePlat,
+  apiUpdateCategoriePlat,
 } from '../../services/apiService';
 import {statusCode} from '../../utils/data';
 import {showToast} from '../../utils/Constantes';
@@ -59,12 +60,12 @@ export const createCategoriePlat = (
       const res = await apiRegisterCategoriePlat(formData);
 
       if (res?.status_code == statusCode.SUCESS) {
-        dispatch(isLoadingStateSave(false));
         showToast('la catégorie a bien été crée');
         const result = await apiGetCategoriePlat();
         dispatch(getCatPlat(result?.items));
         navigation.navigate('CategoriePlat' as never);
       }
+      dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
@@ -83,12 +84,42 @@ export const deleteCategoriePlat = (
       const res = await apiDeletetCategoriePlat(id);
 
       if (res?.status_code == statusCode.SUCESS) {
-        dispatch(isLoadingStateSave(false));
         showToast('la categorie a bien été suprimé');
         const result = await apiGetCategoriePlat();
         dispatch(getCatPlat(result?.items));
         navigation.navigate('CategoriePlat' as never);
       }
+      dispatch(isLoadingStateSave(false));
+    } catch (error) {
+      console.log('error', error);
+      dispatch(isLoadingStateSave(false));
+    }
+  };
+};
+
+export const updateCategoriePlat = (
+  id: string,
+  data: any,
+  navigation: NavigationProp<ReactNavigation.RootParamList>,
+) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(isLoadingStateSave(true));
+
+    try {
+      const res = await apiUpdateCategoriePlat(id, data);
+
+      if (res?.status_code == statusCode.SUCESS) {
+        showToast('la categorie a bien été modifié');
+        const result = await apiGetCategoriePlat();
+        console.log('=======================result=============');
+        console.log(result);
+        console.log('====================================');
+        dispatch(getCatPlat(result?.items));
+        navigation.navigate('CategoriePlat' as never);
+      } else {
+        console.log('err  categorie', res);
+      }
+      dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));

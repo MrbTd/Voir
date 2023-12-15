@@ -20,6 +20,7 @@ import {dataRole, userRole} from '../../../../utils/data';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {createUtilisateur} from '../../../../reducers/gerant/reducerUtilisateur';
 import {useNavigation} from '@react-navigation/native';
+import {updateBoisson} from '../../../../reducers/gerant/reducerBoisson';
 
 interface ModifierBoissonsProps {
   bottomVisible: boolean | undefined;
@@ -35,11 +36,10 @@ const ModifierBoissons = ({
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const formData = new FormData();
-  const [name, setName] = useState(item.name);
-  const [email, setEmail] = useState(item.email);
-  const [password, setPassword] = useState('');
-  const [typeRole, setTypeRole] = useState(item?.type);
-  const [filePicture, setFilePicture] = useState(item.image) as any;
+  const [name, setName] = useState(item?.designation);
+  const [description, setDescription] = useState(item?.description);
+  const [prix, setPrix] = useState(item?.prix);
+  const [filePicture, setFilePicture] = useState(item?.image) as any;
 
   const handleSubmit = async () => {
     const picture = {
@@ -48,37 +48,34 @@ const ModifierBoissons = ({
       name: filePicture?.name,
     };
 
-    formData.append('name', name);
-    formData.append('type', typeRole);
-    formData.append('email', email);
-    formData.append('password', password);
+    formData.append('designation', name);
+    formData.append('description', description);
+    formData.append('prix', prix);
     formData.append('image', picture);
 
     if (!handleError()) {
-      dispatch(createUtilisateur(formData, navigation));
+      dispatch(updateBoisson(item?.id, formData, navigation));
     }
     resetState();
     setBottomVisible(false);
   };
-
+  const resetState = () => {
+    setName('');
+    setDescription('');
+    setPrix('');
+    setFilePicture(null);
+  };
   const handleError = () => {
-    if (!name || !email || !password || !typeRole || !filePicture) {
+    if (!name || !description || !prix || !filePicture) {
       return true;
     } else {
       return false;
     }
   };
 
-  const resetState = () => {
-    setName('');
-    setEmail('');
-    setPassword('');
-    setTypeRole('');
-    setFilePicture(null);
-  };
   return (
     <BottomSheetComponent
-      title="Modifier l'utilisateur"
+      title="Modifier une boisson"
       isVisible={bottomVisible}
       onCancel={() => setBottomVisible(false)}
       onSave={
@@ -88,52 +85,28 @@ const ModifierBoissons = ({
       }
       btnTitle="Modifier">
       <TextInput
-        placeholder="NOM & PRENOM :"
-        style={{borderBottomWidth: 0.5, borderBottomColor: paletteColor.grey}}
+        placeholder="DESIGNATION:"
+        style={{borderBottomWidth: 0.5}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setName(e)}
         defaultValue={name}
       />
+      <TextInput
+        placeholder="DESCRIPTION:"
+        style={{borderBottomWidth: 0.5}}
+        placeholderTextColor={paletteColor.marron}
+        onChangeText={e => setDescription(e)}
+        defaultValue={description}
+      />
 
       <TextInput
-        placeholder="EMAIL :"
-        style={{borderBottomWidth: 0.5, borderBottomColor: paletteColor.grey}}
+        placeholder="PRIX:"
+        style={{borderBottomWidth: 0.5}}
         placeholderTextColor={paletteColor.marron}
-        onChangeText={e => setEmail(e)}
-        defaultValue={email}
+        onChangeText={e => setPrix(e)}
+        keyboardType="numeric"
+        defaultValue={`${prix}`}
       />
-      <TextInput
-        placeholder="MOT DE PASSE :********"
-        style={{borderBottomWidth: 0.5, borderBottomColor: paletteColor.grey}}
-        placeholderTextColor={paletteColor.marron}
-        onChangeText={e => setPassword(e)}
-      />
-      <SelectList
-        setSelected={(val: React.SetStateAction<string>) => {
-          setTypeRole(val);
-        }}
-        data={dataRole}
-        save="key"
-        search={false}
-        boxStyles={{
-          borderWidth: 0,
-          borderBottomWidth: 0.5,
-          borderRadius: 0,
-          borderBottomColor: paletteColor.red,
-        }}
-        defaultOption={{
-          key: typeRole,
-          value: typeRole,
-        }}
-        inputStyles={{
-          left: -15,
-          color: typeRole ? paletteColor.black : paletteColor.marron,
-        }}
-        dropdownStyles={{
-          backgroundColor: 'white',
-        }}
-      />
-
       <View style={{flexDirection: 'row', width: '80%', alignItems: 'center'}}>
         <CustomText fontSize={14} color={paletteColor.marron}>
           PHOTO :{' '}

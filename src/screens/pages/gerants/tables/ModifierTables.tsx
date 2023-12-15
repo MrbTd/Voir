@@ -22,6 +22,7 @@ import {
 } from '../../../../hooks/dispatchSelector';
 import {createSousCategorie} from '../../../../reducers/gerant/reducerSousCategorie';
 import {useNavigation} from '@react-navigation/native';
+import {updateTable} from '../../../../reducers/gerant/reducerTable';
 
 interface ModifierTablesProps {
   bottomVisible: boolean | undefined;
@@ -34,59 +35,33 @@ const ModifierTables = ({
   setBottomVisible,
   item,
 }: ModifierTablesProps) => {
-  const [filePicture, setFilePicture] = useState(null) as any;
-  const [name, setName] = useState('');
-  const [catPlat, setCatPlat] = useState('');
-  const [platCatData, setPlatCatData] = useState([]) as any;
-  const formData = new FormData();
-  const {dataCatPlat} = useAppSelector(state => state.catPlaGerant);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
+  const [numeroTable, setNumeroTable] = useState(item?.numero_table);
+
   const handleSubmit = async () => {
-    const picture = {
-      uri: filePicture?.uri,
-      type: filePicture?.type,
-      name: filePicture?.name,
+    const data = {
+      numero_table: `${numeroTable}`,
     };
-
-    formData.append('name', name);
-    formData.append('image', picture);
-    formData.append('cat', catPlat);
-
     if (!handleError()) {
-      dispatch(createSousCategorie(formData, navigation));
+      dispatch(updateTable(item?.id, data, navigation));
     }
     resetState();
     setBottomVisible(false);
   };
-
   const resetState = () => {
-    setName('');
-    setCatPlat('');
-    setFilePicture(null);
+    setNumeroTable('');
   };
-
   const handleError = () => {
-    if (!name || !filePicture || !catPlat) {
+    if (!numeroTable) {
       return true;
     } else {
       return false;
     }
   };
-
-  useEffect(() => {
-    const data = dataCatPlat.map((item: any) => {
-      return {
-        key: item.designation,
-        value: item.designation,
-      };
-    });
-    setPlatCatData(data);
-  }, []);
-
   return (
     <BottomSheetComponent
-      title="Modifier la table"
+      title="Modifier une table"
       isVisible={bottomVisible}
       onCancel={() => setBottomVisible(false)}
       onSave={
@@ -96,65 +71,13 @@ const ModifierTables = ({
       }
       btnTitle="Modifier">
       <TextInput
-        placeholder="NOM:"
+        placeholder="NUMERO DE TABLE:"
         style={{borderBottomWidth: 0.5}}
         placeholderTextColor={paletteColor.marron}
-        onChangeText={e => setName(e)}
+        onChangeText={e => setNumeroTable(e)}
+        defaultValue={`${numeroTable}`}
+        keyboardType="numeric"
       />
-
-      <SelectList
-        setSelected={(val: React.SetStateAction<string>) => {
-          setCatPlat(val);
-        }}
-        data={platCatData}
-        save="key"
-        search={false}
-        boxStyles={{
-          borderWidth: 0,
-          borderBottomWidth: 0.5,
-          borderRadius: 0,
-          borderBottomColor: paletteColor.red,
-        }}
-        defaultOption={{
-          key: 0,
-          value: 'CATEGORIE',
-        }}
-        inputStyles={{
-          left: -15,
-          color: catPlat ? paletteColor.black : paletteColor.marron,
-        }}
-        dropdownStyles={{
-          backgroundColor: 'white',
-        }}
-      />
-
-      <View style={{flexDirection: 'row', width: '80%', alignItems: 'center'}}>
-        <CustomText fontSize={14} color={paletteColor.marron}>
-          PHOTO :{' '}
-        </CustomText>
-        <TouchableOpacity
-          onPress={() => {
-            DocumentPicker.pick({
-              type: [DocumentPicker.types.images],
-            })
-              .then(res => setFilePicture(res[0]))
-              .catch(() => console.log('error DocumentPicker bon'));
-          }}>
-          {filePicture ? (
-            <MaterialIcons name="check" color={paletteColor.green} size={30} />
-          ) : (
-            <Image
-              source={imageRessource.upload}
-              style={{
-                width: 40,
-                height: 40,
-                resizeMode: 'cover',
-                borderRadius: 8,
-              }}
-            />
-          )}
-        </TouchableOpacity>
-      </View>
     </BottomSheetComponent>
   );
 };

@@ -7,25 +7,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomButton from '../../components/CustomButton';
 import HeaderYam from '../../components/HeaderYam';
-import {apiCreateCommandeServeur} from '../../services/apiService';
-import {useAppSelector} from '../../hooks/dispatchSelector';
 
-const DetailsCommande = ({route}: any) => {
-  const tableId = route.params?.table;
-  const commande = route.params?.commande;
+const RecapitulatifCommande = ({route}: any) => {
+  const commande = route.params;
   const navigation = useNavigation();
-  const {dataTable} = useAppSelector(state => state.tableGerant) as any;
-  const table = dataTable.find(
-    (item: any) => item.id === tableId,
-  )?.numero_table;
-
-  function calculerPrixTotal(commandes: any[]) {
-    const prixTotal = commandes.reduce((total, commande) => {
-      return total + commande.prix * commande.quantite;
-    }, 0);
-
-    return prixTotal;
-  }
+  console.log('===============commandes=====================');
+  console.log(commande);
+  console.log('====================================');
 
   const renderItem = ({item}: any) => (
     <View
@@ -103,7 +91,7 @@ const DetailsCommande = ({route}: any) => {
         <CustomText fontWeight="bold">Prix Total</CustomText>
         <View style={{backgroundColor: paletteColor.marron, padding: 10}}>
           <CustomText color={paletteColor.white} fontWeight="bold">
-            {calculerPrixTotal(commande)} FCFA
+            10000 FCFA
           </CustomText>
         </View>
       </View>
@@ -125,23 +113,7 @@ const DetailsCommande = ({route}: any) => {
       />
     </View>
   );
-  const handleCommande = () => {
-    const data = {
-      // user_id: 11,  je l'envoie plus il recupere a partir du token
-      table_id: tableId,
-      liste_plats: commande.map((item: any) => {
-        return {
-          menu_id: item?.id,
-          quantite: item?.quantite,
-        };
-      }),
-      montant_total: calculerPrixTotal(commande),
-    };
-
-    apiCreateCommandeServeur(data)
-      .then(res => navigation.navigate('ListCommande' as never))
-      .catch(err => console.log(err));
-  };
+  const handleCommande = () => {};
 
   return (
     <View style={{flex: 1}}>
@@ -160,7 +132,7 @@ const DetailsCommande = ({route}: any) => {
               textAlign="center"
               fontWeight="bold"
               color={paletteColor.white}>
-              Table n°{table}
+              Table n°
             </CustomText>
           </View>
           <View
@@ -209,6 +181,6 @@ const DetailsCommande = ({route}: any) => {
   );
 };
 
-export default DetailsCommande;
+export default RecapitulatifCommande;
 
 const styles = StyleSheet.create({});

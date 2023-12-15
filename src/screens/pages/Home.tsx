@@ -8,7 +8,7 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {imageRessource, paletteColor} from '../../utils/Constantes';
 import CustomText from '../../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
@@ -18,11 +18,24 @@ import {
 } from '../../contexts/reducers/actionReducer';
 import {useAuth} from '../../hooks/AuthProvider';
 import {asyncRemoveGetToken} from '../../services/asyncStorage';
+import {useAppDispatch} from '../../hooks/dispatchSelector';
+import {initializePlat} from '../../reducers/gerant/reducerPlat';
+import {initializeTable} from '../../reducers/gerant/reducerTable';
 
 const Home = () => {
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
   const {dispatchAuhtContext} = useAuth();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(initializePlat());
+    dispatch(initializeTable());
+    // dispatch(initializeSousCategorie());
+    // dispatch(initializeCategoriePlat());
+    // dispatch(initializeBoisson());
+    // dispatch(initializeUtilisateur());
+  }, []);
 
   return (
     <ScrollView>

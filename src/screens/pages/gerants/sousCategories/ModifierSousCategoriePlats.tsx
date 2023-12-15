@@ -20,7 +20,10 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../hooks/dispatchSelector';
-import {createSousCategorie} from '../../../../reducers/gerant/reducerSousCategorie';
+import {
+  createSousCategorie,
+  updateSousCategorie,
+} from '../../../../reducers/gerant/reducerSousCategorie';
 import {useNavigation} from '@react-navigation/native';
 
 interface AjouterCategoriePlatsProps {
@@ -34,8 +37,8 @@ const ModifierSousCategoriePlats = ({
   setBottomVisible,
   item,
 }: AjouterCategoriePlatsProps) => {
-  const [filePicture, setFilePicture] = useState(null) as any;
-  const [name, setName] = useState('');
+  const [filePicture, setFilePicture] = useState(item?.image) as any;
+  const [name, setName] = useState(item?.name);
   const [catPlat, setCatPlat] = useState('');
   const [platCatData, setPlatCatData] = useState([]) as any;
   const formData = new FormData();
@@ -54,7 +57,7 @@ const ModifierSousCategoriePlats = ({
     formData.append('cat', catPlat);
 
     if (!handleError()) {
-      dispatch(createSousCategorie(formData, navigation));
+      dispatch(updateSousCategorie(item?.id, formData, navigation));
     }
     resetState();
     setBottomVisible(false);
@@ -84,9 +87,13 @@ const ModifierSousCategoriePlats = ({
     setPlatCatData(data);
   }, []);
 
+  console.log('====================================');
+  console.log(item);
+  console.log('====================================');
+
   return (
     <BottomSheetComponent
-      title="Modifier la sous catégorie"
+      title="Modifier une sous  categorie"
       isVisible={bottomVisible}
       onCancel={() => setBottomVisible(false)}
       onSave={
@@ -100,6 +107,7 @@ const ModifierSousCategoriePlats = ({
         style={{borderBottomWidth: 0.5}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setName(e)}
+        defaultValue={name}
       />
 
       <SelectList
@@ -116,8 +124,8 @@ const ModifierSousCategoriePlats = ({
           borderBottomColor: paletteColor.red,
         }}
         defaultOption={{
-          key: 0,
-          value: 'CATEGORIE',
+          key: item?.cat,
+          value: item?.cat,
         }}
         inputStyles={{
           left: -15,

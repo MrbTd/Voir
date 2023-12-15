@@ -17,26 +17,44 @@ import CustomText from '../../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {data} from '../../utils/mocs';
 import {FlatList} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {useAppSelector} from '../../hooks/dispatchSelector';
 
 const ListMenu = () => {
+  const {dataPlat} = useAppSelector(state => state.platGerant);
+  const {dataTable} = useAppSelector(state => state.tableGerant);
+
   const [verifSearch, setVerifSearch] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Table n°1', value: '1'},
-    {label: 'Table n°2', value: '2'},
-    {label: 'Table n°3', value: '3'},
-  ]);
+  const [items, setItems] = useState(
+    dataTable.map((item: any) => {
+      return {
+        label: `Table n°${item?.numero_table}`,
+        value: item?.id,
+      };
+    }),
+  );
 
-  const [dataCommande, setDataCommande] = useState(data);
+  const donnéesGroupées = dataPlat.reduce((acc: any, obj: any) => {
+    const clé = obj.category_name;
+    if (!acc[clé]) {
+      acc[clé] = [];
+    }
+    acc[clé].push(obj);
+    return acc;
+  }, {});
+
+  const tableauRésultat = Object.keys(donnéesGroupées).map(clé => ({
+    category_name: clé,
+    items: donnéesGroupées[clé],
+  }));
+
+  const [dataCommande, setDataCommande] = useState(tableauRésultat);
   const [commandeSelectionne, setCommandeSelectionne] = useState([]) as any;
-  console.log('====================================');
-  console.log(value);
-  console.log('====================================');
+
   const navigation = useNavigation();
 
   const incrementQuantity = (
@@ -52,13 +70,14 @@ const ListMenu = () => {
   ) => {
     setDataCommande(prevData =>
       prevData.map(categoryData => {
-        if (categoryData.category === category) {
+        if (categoryData.category_name === category) {
           return {
             ...categoryData,
-            items: categoryData.items.map(item =>
-              item.id === itemId
-                ? {...item, quantite: item.quantite + 1}
-                : item,
+            items: categoryData.items.map(
+              (item: {id: string; quantite: number}) =>
+                item.id === itemId
+                  ? {...item, quantite: item.quantite + 1}
+                  : item,
             ),
           };
         }
@@ -94,16 +113,17 @@ const ListMenu = () => {
   ) => {
     setDataCommande(prevData =>
       prevData.map(categoryData => {
-        if (categoryData.category === category) {
+        if (categoryData.category_name === category) {
           return {
             ...categoryData,
-            items: categoryData.items.map(item =>
-              item.id === itemId
-                ? {
-                    ...item,
-                    quantite: item.quantite === 0 ? 0 : item.quantite - 1,
-                  }
-                : item,
+            items: categoryData.items.map(
+              (item: {id: string; quantite: number}) =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      quantite: item.quantite === 0 ? 0 : item.quantite - 1,
+                    }
+                  : item,
             ),
           };
         }
@@ -139,6 +159,10 @@ const ListMenu = () => {
     }
     return true;
   };
+
+  console.log('==================table==================');
+  console.log(value);
+  console.log('====================================');
 
   const handleSubmit = () => {
     navigation.navigate({
@@ -257,7 +281,7 @@ const ListMenu = () => {
 
           <FlatList
             data={dataCommande}
-            keyExtractor={item => item.category}
+            keyExtractor={item => item.category_name}
             style={{
               height: Dimensions.get('screen').height / 2.2,
               marginTop: 10,
@@ -265,13 +289,13 @@ const ListMenu = () => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: 100}}
             renderItem={({item: value}) => (
-              <View key={value.category}>
+              <View key={value.category_name}>
                 <CustomText
                   fontWeight="700"
                   marginTop={5}
                   marginBottom={10}
                   fontSize={20}>
-                  {value.category}
+                  {value.category_name}
                 </CustomText>
                 <FlatList
                   data={value.items}
@@ -286,7 +310,7 @@ const ListMenu = () => {
                         numberOfLines={2}
                         fontWeight="bold"
                         marginTop={10}>
-                        {item.text}
+                        {item.name}
                       </CustomText>
                       <Text style={styles.description} numberOfLines={1}>
                         {item.description}
@@ -314,7 +338,11 @@ const ListMenu = () => {
                             size={20}
                             color={paletteColor.white}
                             onPress={() => {
-                              decrementQuantity(value.category, item.id, item);
+                              decrementQuantity(
+                                value.category_name,
+                                item.id,
+                                item,
+                              );
                             }}
                           />
                           <CustomText
@@ -328,7 +356,11 @@ const ListMenu = () => {
                             size={20}
                             color={paletteColor.white}
                             onPress={() => {
-                              incrementQuantity(value.category, item.id, item);
+                              incrementQuantity(
+                                value.category_name,
+                                item.id,
+                                item,
+                              );
                             }}
                           />
                         </View>
@@ -338,7 +370,7 @@ const ListMenu = () => {
                           fontWeight="bold"
                           color={paletteColor.marron}
                           marginTop={10}>
-                          {item.price}Fr
+                          {item.prix}Fr
                         </CustomText>
                       </View>
                     </View>

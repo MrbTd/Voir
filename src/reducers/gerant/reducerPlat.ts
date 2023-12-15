@@ -4,6 +4,7 @@ import {
   apiDeletetPlat,
   apiGetPlat,
   apiRegisterPlat,
+  apiUpdatePlat,
 } from '../../services/apiService';
 import {statusCode} from '../../utils/data';
 import {showToast} from '../../utils/Constantes';
@@ -60,12 +61,12 @@ export const createPlat = (
       const res = await apiRegisterPlat(formData);
 
       if (res?.status_code == statusCode.SUCESS) {
-        dispatch(isLoadingStateSave(false));
         showToast('le Plat a bien été crée');
         const result = await apiGetPlat();
         dispatch(getPlat(result?.items));
         navigation.navigate('Plats' as never);
       }
+      dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
@@ -84,12 +85,40 @@ export const deletePlat = (
       const res = await apiDeletetPlat(id);
 
       if (res?.status_code == statusCode.SUCESS) {
-        dispatch(isLoadingStateSave(false));
         showToast('le Plat a bien été suprimé');
         const result = await apiGetPlat();
         dispatch(getPlat(result?.items));
         navigation.navigate('Plats' as never);
       }
+      dispatch(isLoadingStateSave(false));
+    } catch (error) {
+      console.log('error', error);
+      dispatch(isLoadingStateSave(false));
+    }
+  };
+};
+
+export const updatePlat = (
+  id: string,
+  data: any,
+  navigation: NavigationProp<ReactNavigation.RootParamList>,
+) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(isLoadingStateSave(true));
+
+    try {
+      const res = await apiUpdatePlat(id, data);
+
+      if (res?.status_code == statusCode.SUCESS) {
+        const result = await apiGetPlat();
+
+        dispatch(getPlat(result?.items));
+        navigation.navigate('Plats' as never);
+        showToast('le Plat a bien été modifié');
+      } else {
+        console.log('err  Plats', res);
+      }
+      dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));

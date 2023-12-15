@@ -23,6 +23,7 @@ import {DrawerActions, useNavigation} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useAppDispatch} from '../../../../hooks/dispatchSelector';
 import {deleteCategoriePlat} from '../../../../reducers/gerant/reducerCategoriePlat';
+import ModifierCategoriePlat from './ModifierCategoriePlat';
 
 const DetailsCategoriePlat = ({route}: any) => {
   const item = route.params;
@@ -124,7 +125,7 @@ const DetailsCategoriePlat = ({route}: any) => {
         onCancel={() => setModalVisible(false)}
       />
 
-      <BottomSheetComponent
+      {/*  <BottomSheetComponent
         title="Modifier la catégorie"
         isVisible={bottomVisible}
         onCancel={() => setBottomVisible(false)}
@@ -160,7 +161,13 @@ const DetailsCategoriePlat = ({route}: any) => {
             </View>
           }
         />
-      </BottomSheetComponent>
+      </BottomSheetComponent> */}
+
+      <ModifierCategoriePlat
+        bottomVisible={bottomVisible}
+        setBottomVisible={setBottomVisible}
+        item={item}
+      />
     </View>
   );
 };

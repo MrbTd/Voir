@@ -18,7 +18,10 @@ import {useAppDispatch} from '../../../../hooks/dispatchSelector';
 import {SelectList} from 'react-native-dropdown-select-list';
 import {dataRole, userRole} from '../../../../utils/data';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {createUtilisateur} from '../../../../reducers/gerant/reducerUtilisateur';
+import {
+  createUtilisateur,
+  updateUtilisateur,
+} from '../../../../reducers/gerant/reducerUtilisateur';
 import {useNavigation} from '@react-navigation/native';
 
 interface AjouterUtilisateurProps {
@@ -41,6 +44,10 @@ const ModifierUtilisateur = ({
   const [typeRole, setTypeRole] = useState(item?.type);
   const [filePicture, setFilePicture] = useState(item.image) as any;
 
+  console.log('====================================');
+  console.log(filePicture);
+  console.log('====================================');
+
   const handleSubmit = async () => {
     const picture = {
       uri: filePicture?.uri,
@@ -55,7 +62,7 @@ const ModifierUtilisateur = ({
     formData.append('image', picture);
 
     if (!handleError()) {
-      dispatch(createUtilisateur(formData, navigation));
+      dispatch(updateUtilisateur(item?.id, formData, navigation));
     }
     resetState();
     setBottomVisible(false);

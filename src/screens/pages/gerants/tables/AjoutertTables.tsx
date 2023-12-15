@@ -29,12 +29,10 @@ const AjouterTables = ({
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const [numeroTable, setNumeroTable] = useState('');
-  const [emplacement, setEmplacement] = useState('');
 
   const handleSubmit = async () => {
     const data = {
       numero_table: numeroTable,
-      emplacement,
     };
     if (!handleError()) {
       dispatch(createTable(data, navigation));
@@ -44,10 +42,9 @@ const AjouterTables = ({
   };
   const resetState = () => {
     setNumeroTable('');
-    setEmplacement('');
   };
   const handleError = () => {
-    if (!numeroTable || !emplacement) {
+    if (!numeroTable) {
       return true;
     } else {
       return false;
@@ -70,12 +67,6 @@ const AjouterTables = ({
         style={{borderBottomWidth: 0.5}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setNumeroTable(e)}
-      />
-      <TextInput
-        placeholder="EMPLACEMENT:"
-        style={{borderBottomWidth: 0.5}}
-        placeholderTextColor={paletteColor.marron}
-        onChangeText={e => setEmplacement(e)}
       />
     </BottomSheetComponent>
   );

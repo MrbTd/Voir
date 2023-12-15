@@ -7,25 +7,40 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import HeaderYam from '../../components/HeaderYam';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {imageRessource, paletteColor} from '../../utils/Constantes';
+import {formaDate, imageRessource, paletteColor} from '../../utils/Constantes';
 import CustomButton from '../../components/CustomButton';
 import CustomText from '../../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {dataCommandeEncour} from '../../utils/mocs';
-import {userRole} from '../../utils/data';
+import {etatCommande, userRole} from '../../utils/data';
 import {useAuth} from '../../hooks/AuthProvider';
 import {
   actionReducer,
   actionTypeReducer,
 } from '../../contexts/reducers/actionReducer';
+import {apiGetListCommandeGerant} from '../../services/apiService';
+import moment from 'moment';
 
 const ListCommande = () => {
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
   const {auhtContext, dispatchAuhtContext} = useAuth();
+  const [dataCommande, setDataCommande] = useState([]) as any;
+
+  const getData = () => {
+    apiGetListCommandeGerant()
+      .then(res => {
+        setDataCommande(res?.items);
+      })
+      .catch(err => console.log(err));
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -147,7 +162,7 @@ const ListCommande = () => {
       </View>
       <View style={{flex: 1, marginHorizontal: '5%', marginTop: '8%'}}>
         <FlatList
-          data={dataCommandeEncour}
+          data={dataCommande}
           keyExtractor={item => item.id.toString()}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) => (
@@ -159,24 +174,33 @@ const ListCommande = () => {
                 marginVertical: '2%',
                 padding: '4%',
               }}
-              onPress={() => navigation.navigate('DetailsCommande' as never)}>
+              onPress={() =>
+                navigation.navigate({
+                  name: 'RecapitulatifCommande',
+                  params: item,
+                } as never)
+              }>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View>
                   <CustomText fontSize={17} fontWeight="600">
-                    Table n°{item.table}
+                    Table n°{item.table_id}
                   </CustomText>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <MaterialCommunityIcons name="clock-outline" />
-                    <CustomText textAlign="center">{item.heure}</CustomText>
+                    <CustomText textAlign="center">
+                      {moment(item.created_at).format('LT')}
+                    </CustomText>
                   </View>
                 </View>
 
                 <View>
                   <CustomText fontSize={17} fontWeight="600">
-                    Commande n°{item.nombreCommande}
+                    Commande
                   </CustomText>
-                  <CustomText textAlign="center">{item.price} FCFA</CustomText>
+                  <CustomText textAlign="center">
+                    {item.montant_total} FCFA
+                  </CustomText>
                 </View>
               </View>
 
@@ -196,7 +220,8 @@ const ListCommande = () => {
                   />
                   <MaterialCommunityIcons
                     name={
-                      item.status == 'Terminer' || item.status == 'En cours'
+                      item.status == etatCommande.TERMINER ||
+                      item.status == etatCommande.ENCOURS
                         ? 'checkbox-marked-circle'
                         : 'checkbox-blank-circle-outline'
                     }
@@ -212,7 +237,7 @@ const ListCommande = () => {
                   />
                   <MaterialCommunityIcons
                     name={
-                      item.status == 'Terminer'
+                      item.status == etatCommande.TERMINER
                         ? 'checkbox-marked-circle'
                         : 'checkbox-blank-circle-outline'
                     }

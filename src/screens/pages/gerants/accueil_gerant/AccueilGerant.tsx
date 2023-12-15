@@ -2,7 +2,6 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {imageRessource, paletteColor} from '../../../../utils/Constantes';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomText from '../../../../components/CustomText';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
