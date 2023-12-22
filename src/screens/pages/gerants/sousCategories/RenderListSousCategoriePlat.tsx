@@ -29,7 +29,7 @@ const RenderListSousCategoriePlat = ({item}: any) => {
       }>
       <View>
         <Image
-          source={imageRessource.salade}
+          source={{uri: item?.image_link}}
           style={{
             width: 90,
             height: 100,
@@ -46,7 +46,7 @@ const RenderListSousCategoriePlat = ({item}: any) => {
           justifyContent: 'center',
           paddingHorizontal: '2%',
         }}>
-        <DisplayDetailsComponent title="ID" value={item.id} border={0} />
+        {/* <DisplayDetailsComponent title="ID" value={item.id} border={0} /> */}
         <DisplayDetailsComponent
           title="DESIGNATION"
           value={item.name}

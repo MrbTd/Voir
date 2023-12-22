@@ -19,12 +19,11 @@ const DisplayDetailsComponent = ({
   border = 1,
 }: DisplayDetailsComponentProps) => {
   return (
-    <View style={{borderBottomWidth: border, paddingVertical: '3%'}}>
+    <View style={{borderBottomWidth: border, paddingVertical: 2}}>
       <View
         style={{
           flexDirection: 'row',
           width: Dimensions.get('screen').width / 2,
-          alignItems: 'center',
         }}>
         <CustomText
           fontSize={14}
@@ -33,7 +32,13 @@ const DisplayDetailsComponent = ({
           textTransform="uppercase">
           {title} :
         </CustomText>
-        {img === true ? value : <CustomText fontSize={16}> {value}</CustomText>}
+        {img === true ? (
+          value
+        ) : (
+          <View style={{width: '80%'}}>
+            <CustomText fontSize={16}> {value}</CustomText>
+          </View>
+        )}
       </View>
     </View>
   );

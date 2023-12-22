@@ -40,12 +40,14 @@ export const initializeBoisson = () => {
       if (result?.status_code == statusCode.SUCESS) {
         dispatch(getBoisson(result?.items));
       } else {
-        showToast('un problème est survenu. veuillez réessayer svp !');
+        showToast(result?.message);
+        console.log('err initial boisson', result?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };
@@ -65,11 +67,15 @@ export const createBoisson = (
         const result = await apiGetBoisson();
         dispatch(getBoisson(result?.items));
         navigation.navigate('Boissons' as never);
+      } else {
+        showToast(res?.message);
+        console.log('err cree boisson', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };
@@ -89,10 +95,16 @@ export const deleteBoisson = (
         const result = await apiGetBoisson();
         dispatch(getBoisson(result?.items));
         navigation.navigate('Boissons' as never);
+      } else {
+        showToast(res?.message);
+
+        console.log('err delete boisson', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
+
       dispatch(isLoadingStateSave(false));
     }
   };
@@ -112,17 +124,18 @@ export const updateBoisson = (
       if (res?.status_code == statusCode.SUCESS) {
         showToast('la boisson a bien été modifié');
         const result = await apiGetBoisson();
-        console.log('=======================result=============');
-        console.log(result);
-        console.log('====================================');
+
         dispatch(getBoisson(result?.items));
         navigation.navigate('Boissons' as never);
       } else {
-        console.log('err delete boisson', res);
+        showToast(res?.message);
+        console.log('err updte boisson', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
+
       dispatch(isLoadingStateSave(false));
     }
   };

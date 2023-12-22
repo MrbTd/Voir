@@ -46,12 +46,9 @@ const ModifierTables = ({
     if (!handleError()) {
       dispatch(updateTable(item?.id, data, navigation));
     }
-    resetState();
     setBottomVisible(false);
   };
-  const resetState = () => {
-    setNumeroTable('');
-  };
+
   const handleError = () => {
     if (!numeroTable) {
       return true;
@@ -72,7 +69,7 @@ const ModifierTables = ({
       btnTitle="Modifier">
       <TextInput
         placeholder="NUMERO DE TABLE:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setNumeroTable(e)}
         defaultValue={`${numeroTable}`}

@@ -39,11 +39,13 @@ export const initializeUtilisateur = () => {
       if (result?.status_code == statusCode.SUCESS) {
         dispatch(getUtilisateurs(result?.items));
       } else {
-        showToast('un problème est survenu. veuillez réessayer svp !');
+        showToast(result?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
+
       dispatch(isLoadingStateSave(false));
     }
   };
@@ -66,11 +68,13 @@ export const createUtilisateur = (
         navigation.navigate('ListUtilisateur' as never);
       } else {
         console.log('err create user', res);
+        showToast(res?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };
@@ -92,11 +96,13 @@ export const deleteUtilisateur = (
         navigation.navigate('ListUtilisateur' as never);
       } else {
         console.log('err delete user', res);
+        showToast(res?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };
@@ -105,6 +111,7 @@ export const updateUtilisateur = (
   id: string,
   data: any,
   navigation: NavigationProp<ReactNavigation.RootParamList>,
+  to: string,
 ) => {
   return async (dispatch: Dispatch) => {
     dispatch(isLoadingStateSave(true));
@@ -116,14 +123,16 @@ export const updateUtilisateur = (
         showToast('le compte a bien été modifié');
         const result = await apiGetUtilisateur();
         dispatch(getUtilisateurs(result?.items));
-        navigation.navigate('ListUtilisateur' as never);
+        navigation?.navigate(to as never);
       } else {
-        console.log('err delete user', res);
+        console.log('err apiUpdateUtilisateur user', res);
+        showToast(res?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };

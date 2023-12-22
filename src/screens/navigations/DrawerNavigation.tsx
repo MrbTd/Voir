@@ -10,6 +10,8 @@ import StacSousCategoriePlat from './StackDrawer/StacSousCategoriePlat';
 import StackTables from './StackDrawer/StackTables';
 import StackPlats from './StackDrawer/StackPlats';
 import StackBoissons from './StackDrawer/StackBoissons';
+import StackCommandeJour from './StackDrawer/StackCommandeJour';
+import StackAccueilGerant from './StackDrawer/StackAccueilGerant';
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigation = () => {
@@ -19,7 +21,8 @@ const DrawerNavigation = () => {
         headerShown: false,
       }}
       drawerContent={props => <DrawerContent {...props} />}>
-      <Drawer.Screen name="AccueilGerant" component={AccueilGerant} />
+      <Drawer.Screen name="StackAccueilGerant" component={StackAccueilGerant} />
+
       <Drawer.Screen name="StackUser" component={StackUser} />
 
       <Drawer.Screen name="StackCategoriePlat" component={StackCategoriePlat} />
@@ -36,7 +39,8 @@ const DrawerNavigation = () => {
       <Drawer.Screen name="StackPlats" component={StackPlats} />
 
       <Drawer.Screen name="AvisClients" component={AvisClients} />
-      <Drawer.Screen name="CommandeJours" component={CommandeJours} />
+
+      <Drawer.Screen name="StackCommandeJour" component={StackCommandeJour} />
     </Drawer.Navigator>
   );
 };

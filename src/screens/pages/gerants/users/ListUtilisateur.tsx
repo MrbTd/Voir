@@ -9,8 +9,9 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../hooks/dispatchSelector';
-import {initializeUtilisateur} from '../../../../reducers/gerant/reducerUtilisateur';
 import LoadingModal from '../../../../components/LoadingModal';
+import {searchData} from '../../../../utils/searchData';
+import {initializeUtilisateur} from '../../../../reducers/gerant/reducerUtilisateur';
 
 const ListUtilisateur = () => {
   const navigation = useNavigation();
@@ -18,11 +19,21 @@ const ListUtilisateur = () => {
   const dispatch = useAppDispatch();
   const {dataUsers, isLoadingUser} = useAppSelector(state => state.usersGerant);
 
+  const [recherche, setRecherche] = useState('');
+  const filterRecherche = searchData(recherche, dataUsers, 'name');
+
+  useEffect(() => {
+    dispatch(initializeUtilisateur());
+  }, []);
+
   return (
-    <BodyGerant title="Utilisateur" onPress={() => setBottomVisible(true)}>
+    <BodyGerant
+      title="Utilisateur"
+      onPress={() => setBottomVisible(true)}
+      onChangeText={e => setRecherche(e)}>
       <View style={{height: Dimensions.get('screen').height}}>
         <FlatList
-          data={dataUsers}
+          data={filterRecherche}
           keyExtractor={(item: any) => item.id.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: 300}}

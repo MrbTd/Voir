@@ -8,9 +8,11 @@ import {
 import React, {useEffect, useState} from 'react';
 import BottomSheetComponent from '../../../../components/BottomSheetComponent';
 import {
+  getExtension,
   imageRessource,
   paletteColor,
   showToast,
+  uuidCustome,
 } from '../../../../utils/Constantes';
 import CustomText from '../../../../components/CustomText';
 import DocumentPicker from 'react-native-document-picker';
@@ -37,7 +39,12 @@ const ModifierSousCategoriePlats = ({
   setBottomVisible,
   item,
 }: AjouterCategoriePlatsProps) => {
-  const [filePicture, setFilePicture] = useState(item?.image) as any;
+  const [filePicture, setFilePicture] = useState({
+    uri: item?.image_link,
+    type: `image/${getExtension(item?.image_link)}`,
+    name: uuidCustome.slice(0, 11) + '.' + getExtension(item?.image_link),
+  }) as any;
+
   const [name, setName] = useState(item?.name);
   const [catPlat, setCatPlat] = useState('');
   const [platCatData, setPlatCatData] = useState([]) as any;
@@ -59,18 +66,12 @@ const ModifierSousCategoriePlats = ({
     if (!handleError()) {
       dispatch(updateSousCategorie(item?.id, formData, navigation));
     }
-    resetState();
+
     setBottomVisible(false);
   };
 
-  const resetState = () => {
-    setName('');
-    setCatPlat('');
-    setFilePicture(null);
-  };
-
   const handleError = () => {
-    if (!name || !filePicture || !catPlat) {
+    if (!name || !filePicture.uri || !catPlat) {
       return true;
     } else {
       return false;
@@ -85,11 +86,7 @@ const ModifierSousCategoriePlats = ({
       };
     });
     setPlatCatData(data);
-  }, []);
-
-  console.log('====================================');
-  console.log(item);
-  console.log('====================================');
+  }, [dataCatPlat]);
 
   return (
     <BottomSheetComponent
@@ -104,7 +101,7 @@ const ModifierSousCategoriePlats = ({
       btnTitle="Modifier">
       <TextInput
         placeholder="NOM:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setName(e)}
         defaultValue={name}
@@ -133,6 +130,9 @@ const ModifierSousCategoriePlats = ({
         }}
         dropdownStyles={{
           backgroundColor: 'white',
+        }}
+        dropdownTextStyles={{
+          color: 'black',
         }}
       />
 

@@ -56,15 +56,17 @@ const Login = () => {
     setIsLoading(true);
     try {
       const res = await loginAuth(data);
-      if (res.status_code === statusCode.SUCESS) {
+      if (res.status_code == statusCode.SUCESS) {
         asyncPostToken({
           role: res.user.type,
           token: res.token,
+          idUser: res.user.id,
         });
         dispatchAuhtContext(
           actionReducer(actionTypeReducer.SIGN_IN, {
             role: res.user.type,
             token: res.token,
+            idUser: res.user.id,
           }),
         );
 
@@ -72,7 +74,7 @@ const Login = () => {
       } else {
         console.log(res);
         setIsLoading(false);
-        showToast(res.status_message);
+        showToast(res?.message);
       }
     } catch (error: any) {
       console.log('error', error);
@@ -184,7 +186,8 @@ const Login = () => {
                 textAlign="center"
                 marginTop={10}
                 marginBottom={5}
-                color={paletteColor.white}>
+                color={paletteColor.white}
+                onPress={() => navigation.navigate('PasswordForgot' as never)}>
                 Mot de passe oublié ?
               </CustomText>
             </View>

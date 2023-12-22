@@ -64,9 +64,10 @@ const AjouterTables = ({
       btnTitle="Ajouter">
       <TextInput
         placeholder="NUMERO DE TABLE:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setNumeroTable(e)}
+        keyboardType="numeric"
       />
     </BottomSheetComponent>
   );

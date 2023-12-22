@@ -71,7 +71,7 @@ const DetailsSousCategoriePlat = ({route}: any) => {
           value={
             <View>
               <Image
-                source={imageRessource.eat}
+                source={{uri: item?.image_link}}
                 style={{
                   width: 50,
                   height: 50,

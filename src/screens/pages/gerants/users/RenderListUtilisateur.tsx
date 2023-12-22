@@ -25,7 +25,7 @@ const RenderListUtilisateur = ({item}: any) => {
       }>
       <View>
         <Image
-          source={imageRessource.user}
+          source={{uri: item?.image_link}}
           style={{
             width: 90,
             height: 100,

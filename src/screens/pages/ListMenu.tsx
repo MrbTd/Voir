@@ -1,15 +1,12 @@
 import {
-  ScrollView,
   StyleSheet,
   View,
   Image,
   Dimensions,
   Text,
   ImageBackground,
-  TouchableOpacity,
   TextInput,
-  SectionList,
-  StatusBar,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {imageRessource, paletteColor} from '../../utils/Constantes';
@@ -20,11 +17,18 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {FlatList} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {useAppSelector} from '../../hooks/dispatchSelector';
+import {useAppDispatch, useAppSelector} from '../../hooks/dispatchSelector';
+import {searchData, searchDataCommande} from '../../utils/searchData';
+import LoadingModal from '../../components/LoadingModal';
+import {initializePlat} from '../../reducers/gerant/reducerPlat';
+import {initializeTable} from '../../reducers/gerant/reducerTable';
 
 const ListMenu = () => {
-  const {dataPlat} = useAppSelector(state => state.platGerant);
-  const {dataTable} = useAppSelector(state => state.tableGerant);
+  const {dataPlat, isLoadingPlat} = useAppSelector(state => state.platGerant);
+  const {dataTable, isLoadingTable} = useAppSelector(
+    state => state.tableGerant,
+  );
+  const dispatch = useAppDispatch();
 
   const [verifSearch, setVerifSearch] = useState(false);
   const [open, setOpen] = useState(false);
@@ -54,6 +58,9 @@ const ListMenu = () => {
 
   const [dataCommande, setDataCommande] = useState(tableauRésultat);
   const [commandeSelectionne, setCommandeSelectionne] = useState([]) as any;
+  const [recherche, setRecherche] = useState('');
+
+  const filterRecherche = searchDataCommande(recherche, dataCommande, 'name');
 
   const navigation = useNavigation();
 
@@ -160,16 +167,17 @@ const ListMenu = () => {
     return true;
   };
 
-  console.log('==================table==================');
-  console.log(value);
-  console.log('====================================');
-
   const handleSubmit = () => {
     navigation.navigate({
       name: 'DetailsCommande',
       params: {table: value, commande: commandeSelectionne},
     } as never);
   };
+
+  useEffect(() => {
+    dispatch(initializePlat());
+    dispatch(initializeTable());
+  }, []);
 
   return (
     <View>
@@ -205,7 +213,9 @@ const ListMenu = () => {
                       backgroundColor: paletteColor.white,
                       height: 35,
                       width: 200,
+                      color: paletteColor.black,
                     }}
+                    onChangeText={e => setRecherche(e)}
                   />
                 )}
                 {!verifSearch && (
@@ -218,7 +228,9 @@ const ListMenu = () => {
                       borderRadius: 5,
                     }}
                     color={paletteColor.yellow}
-                    onPress={() => setVerifSearch(!verifSearch)}
+                    onPress={() => {
+                      setVerifSearch(!verifSearch);
+                    }}
                   />
                 )}
                 {verifSearch && (
@@ -232,7 +244,10 @@ const ListMenu = () => {
                       borderBottomRightRadius: 5,
                     }}
                     color={paletteColor.yellow}
-                    onPress={() => setVerifSearch(!verifSearch)}
+                    onPress={() => {
+                      setVerifSearch(!verifSearch);
+                      setRecherche('');
+                    }}
                   />
                 )}
               </View>
@@ -279,30 +294,134 @@ const ListMenu = () => {
             listMode="SCROLLVIEW"
           />
 
-          <FlatList
-            data={dataCommande}
-            keyExtractor={item => item.category_name}
-            style={{
-              height: Dimensions.get('screen').height / 2.2,
-              marginTop: 10,
-            }}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: 100}}
-            renderItem={({item: value}) => (
-              <View key={value.category_name}>
-                <CustomText
-                  fontWeight="700"
-                  marginTop={5}
-                  marginBottom={10}
-                  fontSize={20}>
-                  {value.category_name}
-                </CustomText>
+          {recherche.length == 0 ? (
+            <FlatList
+              data={dataCommande}
+              keyExtractor={item => item.category_name}
+              style={{
+                height: Dimensions.get('screen').height / 2.2,
+                marginTop: 10,
+              }}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{paddingBottom: 100}}
+              renderItem={({item: value}) => (
+                <View key={value.category_name}>
+                  <CustomText
+                    fontWeight="700"
+                    marginTop={5}
+                    marginBottom={10}
+                    fontSize={20}>
+                    {value.category_name}
+                  </CustomText>
+                  <FlatList
+                    data={value.items}
+                    renderItem={({item}) => (
+                      <View style={styles.card} key={item.id}>
+                        <Image
+                          source={{uri: item?.image_link}}
+                          style={styles.image}
+                        />
+                        <CustomText
+                          fontSize={14}
+                          numberOfLines={2}
+                          fontWeight="bold"
+                          marginTop={10}>
+                          {item.name}
+                        </CustomText>
+                        <CustomText
+                          fontSize={11}
+                          color={'#B3B6B7'}
+                          marginTop={5}
+                          numberOfLines={1}>
+                          {item.description}
+                        </CustomText>
+
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              backgroundColor: paletteColor.yellow,
+                              width: '55%',
+                              justifyContent: 'center',
+                              borderRadius: 5,
+                              marginTop: 10,
+                              padding: '2%',
+                            }}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                decrementQuantity(
+                                  value.category_name,
+                                  item.id,
+                                  item,
+                                );
+                              }}>
+                              <MaterialIcons
+                                name="remove-circle"
+                                size={20}
+                                color={paletteColor.white}
+                              />
+                            </TouchableOpacity>
+                            <CustomText
+                              marginLeft={10}
+                              marginRight={10}
+                              color={paletteColor.white}>
+                              {item.quantite}
+                            </CustomText>
+                            <TouchableOpacity
+                              onPress={() => {
+                                incrementQuantity(
+                                  value.category_name,
+                                  item.id,
+                                  item,
+                                );
+                              }}>
+                              <MaterialCommunityIcons
+                                name="plus-circle"
+                                size={20}
+                                color={paletteColor.white}
+                              />
+                            </TouchableOpacity>
+                          </View>
+
+                          <CustomText
+                            fontSize={13}
+                            fontWeight="bold"
+                            color={paletteColor.marron}
+                            marginTop={10}>
+                            {item.prix}Fr
+                          </CustomText>
+                        </View>
+                      </View>
+                    )}
+                    keyExtractor={item => item.id}
+                    numColumns={2}
+                  />
+                </View>
+              )}
+            />
+          ) : (
+            <FlatList
+              data={filterRecherche}
+              keyExtractor={(item, index) => index.toString()}
+              style={{
+                height: Dimensions.get('screen').height / 2.2,
+                marginTop: 10,
+              }}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{paddingBottom: 100}}
+              renderItem={({item: value}) => (
                 <FlatList
-                  data={value.items}
+                  data={value}
                   renderItem={({item}) => (
                     <View style={styles.card} key={item.id}>
                       <Image
-                        source={imageRessource.salade}
+                        source={{uri: item?.image_link}}
                         style={styles.image}
                       />
                       <CustomText
@@ -312,9 +431,13 @@ const ListMenu = () => {
                         marginTop={10}>
                         {item.name}
                       </CustomText>
-                      <Text style={styles.description} numberOfLines={1}>
+                      <CustomText
+                        fontSize={11}
+                        color={'#B3B6B7'}
+                        marginTop={5}
+                        numberOfLines={1}>
                         {item.description}
-                      </Text>
+                      </CustomText>
 
                       <View
                         style={{
@@ -327,42 +450,46 @@ const ListMenu = () => {
                             flexDirection: 'row',
                             alignItems: 'center',
                             backgroundColor: paletteColor.yellow,
-                            width: '50%',
+                            width: '55%',
                             justifyContent: 'center',
                             borderRadius: 5,
                             marginTop: 10,
                             padding: '2%',
                           }}>
-                          <MaterialIcons
-                            name="remove-circle"
-                            size={20}
-                            color={paletteColor.white}
+                          <TouchableOpacity
                             onPress={() => {
                               decrementQuantity(
-                                value.category_name,
+                                item.category_name,
                                 item.id,
                                 item,
                               );
-                            }}
-                          />
+                            }}>
+                            <MaterialIcons
+                              name="remove-circle"
+                              size={20}
+                              color={paletteColor.white}
+                            />
+                          </TouchableOpacity>
                           <CustomText
                             marginLeft={10}
                             marginRight={10}
                             color={paletteColor.white}>
                             {item.quantite}
                           </CustomText>
-                          <MaterialCommunityIcons
-                            name="plus-circle"
-                            size={20}
-                            color={paletteColor.white}
+                          <TouchableOpacity
                             onPress={() => {
                               incrementQuantity(
-                                value.category_name,
+                                item.category_name,
                                 item.id,
                                 item,
                               );
-                            }}
-                          />
+                            }}>
+                            <MaterialCommunityIcons
+                              name="plus-circle"
+                              size={20}
+                              color={paletteColor.white}
+                            />
+                          </TouchableOpacity>
                         </View>
 
                         <CustomText
@@ -378,17 +505,15 @@ const ListMenu = () => {
                   keyExtractor={item => item.id}
                   numColumns={2}
                 />
-              </View>
-            )}
-          />
+              )}
+            />
+          )}
           <View style={{position: 'absolute', width: '100%', bottom: 0}}>
             <CustomButton
               disabled={isAllQuantitiesZero()}
               label="Voir la commande"
               backgroundColor={
-                isAllQuantitiesZero()
-                  ? paletteColor.grey_light
-                  : paletteColor.yellow
+                isAllQuantitiesZero() ? paletteColor.grey : paletteColor.yellow
               }
               onPress={handleSubmit}
               fontSize={20}
@@ -396,6 +521,7 @@ const ListMenu = () => {
           </View>
         </View>
       </View>
+      <LoadingModal visible={isLoadingPlat} />
     </View>
   );
 };
@@ -422,10 +548,5 @@ const styles = StyleSheet.create({
     height: 100,
     resizeMode: 'cover',
     borderRadius: 8,
-  },
-  description: {
-    fontSize: 11,
-    color: '#B3B6B7',
-    marginTop: 5,
   },
 });

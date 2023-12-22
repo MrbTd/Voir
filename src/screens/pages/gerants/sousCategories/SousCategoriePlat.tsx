@@ -5,8 +5,14 @@ import {FlatList} from 'react-native-gesture-handler';
 import BodyGerant from '../../../../components/BodyGerant';
 import RenderListSousCategoriePlat from './RenderListSousCategoriePlat';
 import AjouterSousCategoriePlats from './AjouterSousCategoriePlats';
-import {useAppSelector} from '../../../../hooks/dispatchSelector';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../hooks/dispatchSelector';
 import LoadingModal from '../../../../components/LoadingModal';
+import {searchData} from '../../../../utils/searchData';
+import {initializeSousCategorie} from '../../../../reducers/gerant/reducerSousCategorie';
+import {initializeCategoriePlat} from '../../../../reducers/gerant/reducerCategoriePlat';
 
 const SousCategoriePlat = () => {
   const [bottomVisible, setBottomVisible] = useState(false);
@@ -14,11 +20,23 @@ const SousCategoriePlat = () => {
     state => state.sousCatGerant,
   );
 
+  const [recherche, setRecherche] = useState('');
+  const filterRecherche = searchData(recherche, dataSousCat, 'name');
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(initializeSousCategorie());
+    dispatch(initializeCategoriePlat());
+  }, []);
+
   return (
-    <BodyGerant title="Sous-catégories" onPress={() => setBottomVisible(true)}>
+    <BodyGerant
+      title="Sous-catégories"
+      onPress={() => setBottomVisible(true)}
+      onChangeText={e => setRecherche(e)}>
       <View style={{height: Dimensions.get('screen').height}}>
         <FlatList
-          data={dataSousCat}
+          data={filterRecherche}
           keyExtractor={(item: any) => item.id.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: 300}}

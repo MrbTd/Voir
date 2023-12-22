@@ -32,3 +32,23 @@ export const showToast = (title: string) => {
 export const formaDate = (date: string) => {
   return moment(new Date(date)).locale('fr').format('L');
 };
+
+export const moyenneData = (data: any, cle: any) => {
+  const noteRestaurantValues = data
+    ?.map((entry: any) => entry[`${cle}`])
+    ?.filter(
+      (value: null | undefined) => value !== null && value !== undefined,
+    );
+
+  const moyenneNoteRestaurant =
+    noteRestaurantValues?.reduce((sum: any, value: any) => sum + value, 0) /
+    noteRestaurantValues?.length;
+
+  return moyenneNoteRestaurant;
+};
+
+export const getExtension = (file1: string) => {
+  return `${file1?.slice(file1?.lastIndexOf('.') - 1 + 2)}`;
+};
+
+export const uuidCustome = new Date().getTime().toString();

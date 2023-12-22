@@ -8,8 +8,8 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect} from 'react';
-import {imageRessource, paletteColor} from '../../utils/Constantes';
+import React, {useEffect, useState} from 'react';
+import {imageRessource, paletteColor, showToast} from '../../utils/Constantes';
 import CustomText from '../../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -21,20 +21,33 @@ import {asyncRemoveGetToken} from '../../services/asyncStorage';
 import {useAppDispatch} from '../../hooks/dispatchSelector';
 import {initializePlat} from '../../reducers/gerant/reducerPlat';
 import {initializeTable} from '../../reducers/gerant/reducerTable';
+import {getUserConnect} from '../../services/apiService';
+import {statusCode} from '../../utils/data';
 
 const Home = () => {
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
-  const {dispatchAuhtContext} = useAuth();
-  const dispatch = useAppDispatch();
+  const {auhtContext, dispatchAuhtContext} = useAuth();
+  const [dataUser, setDataUser] = useState({}) as any;
+
+  const getData = () => {
+    getUserConnect(auhtContext.data?.idUser)
+      .then(res => {
+        if (res?.status_code == statusCode.SUCESS) {
+          setDataUser(res?.data);
+        } else {
+          showToast(res?.message);
+          console.log('err getUserConnect', res);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        showToast('un problème est survenu. veuillez réessayer svp !');
+      });
+  };
 
   useEffect(() => {
-    dispatch(initializePlat());
-    dispatch(initializeTable());
-    // dispatch(initializeSousCategorie());
-    // dispatch(initializeCategoriePlat());
-    // dispatch(initializeBoisson());
-    // dispatch(initializeUtilisateur());
+    getData();
   }, []);
 
   return (
@@ -60,10 +73,12 @@ const Home = () => {
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
-                  source={imageRessource.user}
+                  source={{uri: dataUser?.chemin_image_profil}}
                   style={{width: 50, height: 50, borderRadius: 100}}
                 />
-                <CustomText marginLeft={5}>Toure Ben Daouda</CustomText>
+                <CustomText marginLeft={5} textTransform="capitalize">
+                  {dataUser?.utilisateur?.name}
+                </CustomText>
               </View>
               <TouchableOpacity
                 onPress={() => {

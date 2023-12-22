@@ -1,6 +1,6 @@
 import {StyleSheet, View, FlatList, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
-import {imageRessource, paletteColor} from '../../utils/Constantes';
+import {imageRessource, paletteColor, showToast} from '../../utils/Constantes';
 import CustomText from '../../components/CustomText';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,12 +9,19 @@ import CustomButton from '../../components/CustomButton';
 import HeaderYam from '../../components/HeaderYam';
 import {apiCreateCommandeServeur} from '../../services/apiService';
 import {useAppSelector} from '../../hooks/dispatchSelector';
+import {useAuth} from '../../hooks/AuthProvider';
+import LoadingModal from '../../components/LoadingModal';
+import {statusCode} from '../../utils/data';
 
 const DetailsCommande = ({route}: any) => {
   const tableId = route.params?.table;
   const commande = route.params?.commande;
   const navigation = useNavigation();
   const {dataTable} = useAppSelector(state => state.tableGerant) as any;
+  const [description, setDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const {auhtContext, dispatchAuhtContext} = useAuth();
+
   const table = dataTable.find(
     (item: any) => item.id === tableId,
   )?.numero_table;
@@ -63,9 +70,7 @@ const DetailsCommande = ({route}: any) => {
     </View>
   );
 
-  const renderFooter = (
-    navigation: NavigationProp<ReactNavigation.RootParamList>,
-  ) => (
+  const renderFooter = () => (
     <View style={{paddingHorizontal: '3%'}}>
       <TouchableOpacity
         style={{
@@ -91,6 +96,7 @@ const DetailsCommande = ({route}: any) => {
         marginTop={10}
         multiline={true}
         height={100}
+        onChangeText={e => setDescription(e)}
       />
 
       <View
@@ -126,9 +132,11 @@ const DetailsCommande = ({route}: any) => {
     </View>
   );
   const handleCommande = () => {
+    setIsLoading(true);
     const data = {
-      // user_id: 11,  je l'envoie plus il recupere a partir du token
+      user_id: auhtContext.data.idUser,
       table_id: tableId,
+      description: description,
       liste_plats: commande.map((item: any) => {
         return {
           menu_id: item?.id,
@@ -139,8 +147,20 @@ const DetailsCommande = ({route}: any) => {
     };
 
     apiCreateCommandeServeur(data)
-      .then(res => navigation.navigate('ListCommande' as never))
-      .catch(err => console.log(err));
+      .then(res => {
+        if (res?.status_code == statusCode.SUCESS) {
+          navigation.navigate('ListCommande' as never);
+        } else {
+          showToast(res?.message);
+          console.log('err cree commande', res);
+        }
+        console.log('data', res);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        setIsLoading(false);
+        showToast('un problème est survenu. veuillez réessayer svp !');
+      });
   };
 
   return (
@@ -200,11 +220,12 @@ const DetailsCommande = ({route}: any) => {
           data={commande}
           keyExtractor={item => item.id}
           renderItem={renderItem}
-          ListFooterComponent={() => renderFooter(navigation)}
+          ListFooterComponent={renderFooter()}
           ListFooterComponentStyle={{marginBottom: 20}}
           showsVerticalScrollIndicator={false}
         />
       </View>
+      <LoadingModal visible={isLoading} />
     </View>
   );
 };

@@ -8,9 +8,11 @@ import {
 import React, {useState} from 'react';
 import BottomSheetComponent from '../../../../components/BottomSheetComponent';
 import {
+  getExtension,
   imageRessource,
   paletteColor,
   showToast,
+  uuidCustome,
 } from '../../../../utils/Constantes';
 import CustomText from '../../../../components/CustomText';
 import DocumentPicker from 'react-native-document-picker';
@@ -34,7 +36,11 @@ const ModifierCategoriePlat = ({
   const navigation = useNavigation();
   const formData = new FormData();
   const [designation, setDesignation] = useState(item?.designation);
-  const [filePicture, setFilePicture] = useState(item?.image) as any;
+  const [filePicture, setFilePicture] = useState({
+    uri: item?.image_link,
+    type: `image/${getExtension(item?.image_link)}`,
+    name: uuidCustome.slice(0, 11) + '.' + getExtension(item?.image_link),
+  }) as any;
 
   const handleSubmit = async () => {
     const picture = {
@@ -50,22 +56,15 @@ const ModifierCategoriePlat = ({
     if (!handleError()) {
       dispatch(updateCategoriePlat(item?.id, formData, navigation));
     }
-    resetState();
     setBottomVisible(false);
   };
 
   const handleError = () => {
-    if (!designation || !filePicture) {
+    if (!designation || !filePicture.uri) {
       return true;
     } else {
       return false;
     }
-  };
-
-  const resetState = () => {
-    setDesignation('');
-
-    setFilePicture(null);
   };
 
   return (
@@ -81,7 +80,7 @@ const ModifierCategoriePlat = ({
       btnTitle="Modifier">
       <TextInput
         placeholder="Designation:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setDesignation(e)}
         defaultValue={designation}

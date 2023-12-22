@@ -41,11 +41,12 @@ export const initializeSousCategorie = () => {
       if (result?.status_code == statusCode.SUCESS) {
         dispatch(getSousCategories(result?.items));
       } else {
-        showToast('un problème est survenu. veuillez réessayer svp !');
+        showToast(result?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
       dispatch(isLoadingStateSave(false));
     }
   };
@@ -65,11 +66,15 @@ export const createSousCategorie = (
         const result = await apiGetSousCategorie();
         dispatch(getSousCategories(result?.items));
         navigation.navigate('SousCategoriePlat' as never);
+      } else {
+        showToast(res?.message);
+        console.log('createSousCategories err', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };
@@ -89,11 +94,15 @@ export const deleteSousCategorie = (
         const result = await apiGetSousCategorie();
         dispatch(getSousCategories(result?.items));
         navigation.navigate('SousCategoriePlat' as never);
+      } else {
+        showToast(res?.message);
+        console.log('delete sous cat', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };
@@ -112,18 +121,18 @@ export const updateSousCategorie = (
       if (res?.status_code == statusCode.SUCESS) {
         showToast('la sous categorie a bien été modifié');
         const result = await apiGetSousCategorie();
-        console.log('=======================result=============');
-        console.log(result);
-        console.log('====================================');
+
         dispatch(getSousCategories(result?.items));
         navigation.navigate('SousCategoriePlat' as never);
       } else {
         console.log('err  SousCategoriePlat', res);
+        showToast(res?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };

@@ -39,11 +39,13 @@ export const initializeCategoriePlat = () => {
       if (result?.status_code == statusCode.SUCESS) {
         dispatch(getCatPlat(result?.items));
       } else {
-        showToast('un problème est survenu. veuillez réessayer svp !');
+        showToast(result?.message);
+        console.log('Error initial catplat', result);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
       dispatch(isLoadingStateSave(false));
     }
   };
@@ -64,11 +66,16 @@ export const createCategoriePlat = (
         const result = await apiGetCategoriePlat();
         dispatch(getCatPlat(result?.items));
         navigation.navigate('CategoriePlat' as never);
+      } else {
+        showToast(res?.message);
+
+        console.log('res catpla', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };
@@ -88,10 +95,15 @@ export const deleteCategoriePlat = (
         const result = await apiGetCategoriePlat();
         dispatch(getCatPlat(result?.items));
         navigation.navigate('CategoriePlat' as never);
+      } else {
+        showToast(res?.message);
+        console.log('error delete catplat', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
+
       dispatch(isLoadingStateSave(false));
     }
   };
@@ -111,17 +123,18 @@ export const updateCategoriePlat = (
       if (res?.status_code == statusCode.SUCESS) {
         showToast('la categorie a bien été modifié');
         const result = await apiGetCategoriePlat();
-        console.log('=======================result=============');
-        console.log(result);
-        console.log('====================================');
+
         dispatch(getCatPlat(result?.items));
         navigation.navigate('CategoriePlat' as never);
       } else {
         console.log('err  categorie', res);
+        showToast(res?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
+
       dispatch(isLoadingStateSave(false));
     }
   };

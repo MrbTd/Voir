@@ -34,9 +34,12 @@ const AjouterPlats = ({bottomVisible, setBottomVisible}: AjouterPlatsProps) => {
   const [description, setDescription] = useState('');
   const [prix, setPrix] = useState('');
   const [sousCatPlat, setSousCatPlat] = useState('');
+  const [catPlat, setCatPlat] = useState('');
   const [platSousCatData, setPlatSousCatData] = useState([]) as any;
+  const [platCatData, setPlatCatData] = useState([]) as any;
   const formData = new FormData();
   const {dataSousCat} = useAppSelector(state => state.sousCatGerant);
+  const {dataCatPlat} = useAppSelector(state => state.catPlaGerant);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
@@ -51,7 +54,8 @@ const AjouterPlats = ({bottomVisible, setBottomVisible}: AjouterPlatsProps) => {
     formData.append('description', description);
     formData.append('prix', prix);
     formData.append('image', picture);
-    formData.append('category_name', sousCatPlat);
+    formData.append('category_name', catPlat);
+    formData.append('souscat', sousCatPlat);
 
     if (!handleError()) {
       dispatch(createPlat(formData, navigation));
@@ -69,7 +73,14 @@ const AjouterPlats = ({bottomVisible, setBottomVisible}: AjouterPlatsProps) => {
   };
 
   const handleError = () => {
-    if (!designation || !filePicture || !description || !prix || !sousCatPlat) {
+    if (
+      !designation ||
+      !filePicture ||
+      !description ||
+      !prix ||
+      !sousCatPlat ||
+      !catPlat
+    ) {
       return true;
     } else {
       return false;
@@ -83,8 +94,17 @@ const AjouterPlats = ({bottomVisible, setBottomVisible}: AjouterPlatsProps) => {
         value: item.name,
       };
     });
+
+    const dataCat = dataCatPlat.map((item: any) => {
+      return {
+        key: item.designation,
+        value: item.designation,
+      };
+    });
+
     setPlatSousCatData(data);
-  }, []);
+    setPlatCatData(dataCat);
+  }, [dataSousCat, dataCatPlat]);
   return (
     <BottomSheetComponent
       title="Ajouter un plats"
@@ -98,16 +118,46 @@ const AjouterPlats = ({bottomVisible, setBottomVisible}: AjouterPlatsProps) => {
       btnTitle="Ajouter">
       <TextInput
         placeholder="DESIGNATION:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setDesignation(e)}
       />
       <TextInput
         placeholder="DESCRIPTION:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setDescription(e)}
       />
+
+      <SelectList
+        setSelected={(val: React.SetStateAction<string>) => {
+          setCatPlat(val);
+        }}
+        data={platCatData}
+        save="key"
+        search={false}
+        boxStyles={{
+          borderWidth: 0,
+          borderBottomWidth: 0.5,
+          borderRadius: 0,
+          borderBottomColor: paletteColor.red,
+        }}
+        defaultOption={{
+          key: 0,
+          value: 'CATEGORIE',
+        }}
+        inputStyles={{
+          left: -15,
+          color: catPlat ? paletteColor.black : paletteColor.marron,
+        }}
+        dropdownStyles={{
+          backgroundColor: 'white',
+        }}
+        dropdownTextStyles={{
+          color: 'black',
+        }}
+      />
+
       <SelectList
         setSelected={(val: React.SetStateAction<string>) => {
           setSousCatPlat(val);
@@ -132,13 +182,17 @@ const AjouterPlats = ({bottomVisible, setBottomVisible}: AjouterPlatsProps) => {
         dropdownStyles={{
           backgroundColor: 'white',
         }}
+        dropdownTextStyles={{
+          color: 'black',
+        }}
       />
 
       <TextInput
         placeholder="PRIX:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setPrix(e)}
+        keyboardType="numeric"
       />
       <View style={{flexDirection: 'row', width: '80%', alignItems: 'center'}}>
         <CustomText fontSize={14} color={paletteColor.marron}>

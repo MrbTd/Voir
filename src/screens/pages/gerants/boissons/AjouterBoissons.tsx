@@ -81,22 +81,23 @@ const AjouterBoissons = ({
       btnTitle="Ajouter">
       <TextInput
         placeholder="DESIGNATION:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setName(e)}
       />
       <TextInput
         placeholder="DESCRIPTION:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setDescription(e)}
       />
 
       <TextInput
         placeholder="PRIX:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setPrix(e)}
+        keyboardType="numeric"
       />
       <View style={{flexDirection: 'row', width: '80%', alignItems: 'center'}}>
         <CustomText fontSize={14} color={paletteColor.marron}>

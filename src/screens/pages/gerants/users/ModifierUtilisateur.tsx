@@ -8,9 +8,11 @@ import {
 import React, {useState} from 'react';
 import BottomSheetComponent from '../../../../components/BottomSheetComponent';
 import {
+  getExtension,
   imageRessource,
   paletteColor,
   showToast,
+  uuidCustome,
 } from '../../../../utils/Constantes';
 import CustomText from '../../../../components/CustomText';
 import DocumentPicker from 'react-native-document-picker';
@@ -38,15 +40,16 @@ const ModifierUtilisateur = ({
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const formData = new FormData();
-  const [name, setName] = useState(item.name);
-  const [email, setEmail] = useState(item.email);
+  const [name, setName] = useState(item?.name);
+  const [email, setEmail] = useState(item?.email);
   const [password, setPassword] = useState('');
   const [typeRole, setTypeRole] = useState(item?.type);
-  const [filePicture, setFilePicture] = useState(item.image) as any;
 
-  console.log('====================================');
-  console.log(filePicture);
-  console.log('====================================');
+  const [filePicture, setFilePicture] = useState({
+    uri: item?.image_link,
+    type: `image/${getExtension(item?.image_link)}`,
+    name: uuidCustome.slice(0, 11) + '.' + getExtension(item?.image_link),
+  }) as any;
 
   const handleSubmit = async () => {
     const picture = {
@@ -62,27 +65,21 @@ const ModifierUtilisateur = ({
     formData.append('image', picture);
 
     if (!handleError()) {
-      dispatch(updateUtilisateur(item?.id, formData, navigation));
+      dispatch(
+        updateUtilisateur(item?.id, formData, navigation, 'ListUtilisateur'),
+      );
     }
-    resetState();
     setBottomVisible(false);
   };
 
   const handleError = () => {
-    if (!name || !email || !password || !typeRole || !filePicture) {
+    if (!name || !email || !typeRole || !filePicture.uri) {
       return true;
     } else {
       return false;
     }
   };
 
-  const resetState = () => {
-    setName('');
-    setEmail('');
-    setPassword('');
-    setTypeRole('');
-    setFilePicture(null);
-  };
   return (
     <BottomSheetComponent
       title="Modifier l'utilisateur"
@@ -96,7 +93,11 @@ const ModifierUtilisateur = ({
       btnTitle="Modifier">
       <TextInput
         placeholder="NOM & PRENOM :"
-        style={{borderBottomWidth: 0.5, borderBottomColor: paletteColor.grey}}
+        style={{
+          borderBottomWidth: 0.5,
+          borderBottomColor: paletteColor.grey,
+          color: paletteColor.black,
+        }}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setName(e)}
         defaultValue={name}
@@ -104,14 +105,22 @@ const ModifierUtilisateur = ({
 
       <TextInput
         placeholder="EMAIL :"
-        style={{borderBottomWidth: 0.5, borderBottomColor: paletteColor.grey}}
+        style={{
+          borderBottomWidth: 0.5,
+          borderBottomColor: paletteColor.grey,
+          color: paletteColor.black,
+        }}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setEmail(e)}
         defaultValue={email}
       />
       <TextInput
         placeholder="MOT DE PASSE :********"
-        style={{borderBottomWidth: 0.5, borderBottomColor: paletteColor.grey}}
+        style={{
+          borderBottomWidth: 0.5,
+          borderBottomColor: paletteColor.grey,
+          color: paletteColor.black,
+        }}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setPassword(e)}
       />
@@ -138,6 +147,9 @@ const ModifierUtilisateur = ({
         }}
         dropdownStyles={{
           backgroundColor: 'white',
+        }}
+        dropdownTextStyles={{
+          color: 'black',
         }}
       />
 

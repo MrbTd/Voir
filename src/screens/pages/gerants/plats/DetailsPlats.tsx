@@ -64,6 +64,7 @@ const DetailsPlats = ({route}: any) => {
         <DisplayDetailsComponent title="DESIGNATION" value={item.name} />
         <DisplayDetailsComponent title="DESCRIPTION" value={item.description} />
         <DisplayDetailsComponent title="CATEGORIE" value={item.category_name} />
+        <DisplayDetailsComponent title="SOUS-CATEGORIE" value={item.souscat} />
         <DisplayDetailsComponent
           title="PRIX MOYEN"
           value={`${item.prix} FCFA`}
@@ -75,7 +76,7 @@ const DetailsPlats = ({route}: any) => {
           value={
             <View>
               <Image
-                source={imageRessource.eat}
+                source={{uri: item?.image_link}}
                 style={{
                   width: 50,
                   height: 50,

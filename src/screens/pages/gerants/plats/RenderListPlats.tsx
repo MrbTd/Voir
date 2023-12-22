@@ -14,7 +14,7 @@ const RenderListPlats = ({item}: any) => {
       style={{
         marginHorizontal: '5%',
         borderRadius: 8,
-        height: 100,
+        height: 120,
         marginVertical: '4%',
         flexDirection: 'row',
         alignItems: 'center',
@@ -26,10 +26,10 @@ const RenderListPlats = ({item}: any) => {
       }>
       <View>
         <Image
-          source={imageRessource.salade}
+          source={{uri: item?.image_link}}
           style={{
-            width: 90,
-            height: 100,
+            width: 95,
+            height: 120,
             resizeMode: 'center',
             borderTopLeftRadius: 8,
             borderBottomLeftRadius: 8,
@@ -45,17 +45,22 @@ const RenderListPlats = ({item}: any) => {
         }}>
         <DisplayDetailsComponent
           title="DESIGNATION"
-          value={item.name}
+          value={item?.name}
           border={0}
         />
         <DisplayDetailsComponent
           title="CATEGORIE"
-          value={item.category_name}
+          value={item?.category_name}
+          border={0}
+        />
+        <DisplayDetailsComponent
+          title="SOUS-CATEGORIE"
+          value={item?.souscat}
           border={0}
         />
         <DisplayDetailsComponent
           title="PRIX"
-          value={`${item.prix} FCFA`}
+          value={`${item?.prix} FCFA`}
           border={0}
         />
       </View>

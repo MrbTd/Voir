@@ -8,9 +8,11 @@ import {
 import React, {useEffect, useState} from 'react';
 import BottomSheetComponent from '../../../../components/BottomSheetComponent';
 import {
+  getExtension,
   imageRessource,
   paletteColor,
   showToast,
+  uuidCustome,
 } from '../../../../utils/Constantes';
 import CustomText from '../../../../components/CustomText';
 import DocumentPicker from 'react-native-document-picker';
@@ -20,7 +22,6 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../hooks/dispatchSelector';
-import {createSousCategorie} from '../../../../reducers/gerant/reducerSousCategorie';
 import {useNavigation} from '@react-navigation/native';
 import {updatePlat} from '../../../../reducers/gerant/reducerPlat';
 
@@ -35,14 +36,24 @@ const ModifierPlats = ({
   setBottomVisible,
   item,
 }: ModifierPlatsPlatsProps) => {
-  const [filePicture, setFilePicture] = useState(item?.image) as any;
+  const [filePicture, setFilePicture] = useState({
+    uri: item?.image_link,
+    type: `image/${getExtension(item?.image_link)}`,
+    name: uuidCustome.slice(0, 11) + '.' + getExtension(item?.image_link),
+  }) as any;
+
   const [designation, setDesignation] = useState(item?.name);
   const [description, setDescription] = useState(item?.description);
   const [prix, setPrix] = useState(item?.prix);
-  const [sousCatPlat, setSousCatPlat] = useState(item?.category_name);
+  const [sousCatPlat, setSousCatPlat] = useState(item?.souscat);
+  const [catPlat, setCatPlat] = useState(item?.category_name);
   const [platSousCatData, setPlatSousCatData] = useState([]) as any;
+  const [platCatData, setPlatCatData] = useState([]) as any;
+
   const formData = new FormData();
   const {dataSousCat} = useAppSelector(state => state.sousCatGerant);
+  const {dataCatPlat} = useAppSelector(state => state.catPlaGerant);
+
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
@@ -57,25 +68,24 @@ const ModifierPlats = ({
     formData.append('description', description);
     formData.append('prix', prix);
     formData.append('image', picture);
-    formData.append('category_name', sousCatPlat);
+    formData.append('category_name', catPlat);
+    formData.append('souscat', sousCatPlat);
 
     if (!handleError()) {
       dispatch(updatePlat(item?.id, formData, navigation));
     }
-    resetState();
     setBottomVisible(false);
   };
 
-  const resetState = () => {
-    setDesignation('');
-    setDescription('');
-    setPrix('');
-    setSousCatPlat('');
-    setFilePicture(null);
-  };
-
   const handleError = () => {
-    if (!designation || !filePicture || !description || !prix || !sousCatPlat) {
+    if (
+      !designation ||
+      !filePicture?.uri ||
+      !description ||
+      !prix ||
+      !sousCatPlat ||
+      !catPlat
+    ) {
       return true;
     } else {
       return false;
@@ -83,14 +93,21 @@ const ModifierPlats = ({
   };
 
   useEffect(() => {
-    const data = dataSousCat.map((item: any) => {
+    const dataSousCategorie = dataSousCat.map((item: any) => {
       return {
         key: item.name,
         value: item.name,
       };
     });
-    setPlatSousCatData(data);
-  }, []);
+    const dataCat = dataCatPlat.map((item: any) => {
+      return {
+        key: item.designation,
+        value: item.designation,
+      };
+    });
+    setPlatSousCatData(dataSousCategorie);
+    setPlatCatData(dataCat);
+  }, [dataSousCat, dataCatPlat]);
 
   return (
     <BottomSheetComponent
@@ -105,18 +122,48 @@ const ModifierPlats = ({
       btnTitle="Modifier">
       <TextInput
         placeholder="DESIGNATION:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setDesignation(e)}
         defaultValue={designation}
       />
       <TextInput
         placeholder="DESCRIPTION:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setDescription(e)}
         defaultValue={description}
       />
+
+      <SelectList
+        setSelected={(val: React.SetStateAction<string>) => {
+          setCatPlat(val);
+        }}
+        data={platCatData}
+        save="key"
+        search={false}
+        boxStyles={{
+          borderWidth: 0,
+          borderBottomWidth: 0.5,
+          borderRadius: 0,
+          borderBottomColor: paletteColor.red,
+        }}
+        defaultOption={{
+          key: item.category_name,
+          value: item.category_name,
+        }}
+        inputStyles={{
+          left: -15,
+          color: catPlat ? paletteColor.black : paletteColor.marron,
+        }}
+        dropdownStyles={{
+          backgroundColor: 'white',
+        }}
+        dropdownTextStyles={{
+          color: 'black',
+        }}
+      />
+
       <SelectList
         setSelected={(val: React.SetStateAction<string>) => {
           setSousCatPlat(val);
@@ -131,8 +178,8 @@ const ModifierPlats = ({
           borderBottomColor: paletteColor.red,
         }}
         defaultOption={{
-          key: item.name,
-          value: item.name,
+          key: item.souscat,
+          value: item.souscat,
         }}
         inputStyles={{
           left: -15,
@@ -141,11 +188,14 @@ const ModifierPlats = ({
         dropdownStyles={{
           backgroundColor: 'white',
         }}
+        dropdownTextStyles={{
+          color: 'black',
+        }}
       />
 
       <TextInput
         placeholder="PRIX:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setPrix(e)}
         defaultValue={`${prix}`}

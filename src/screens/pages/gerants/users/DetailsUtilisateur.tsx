@@ -22,9 +22,7 @@ const DetailsUtilisateur = ({route}: any) => {
 
   const handleDelete = () => {
     dispatch(deleteUtilisateur(item?.id, navigation));
-
     setModalVisible(false);
-    console.log('clique');
   };
   return (
     <View style={{height: Dimensions.get('screen').height}}>
@@ -63,7 +61,7 @@ const DetailsUtilisateur = ({route}: any) => {
           value={
             <View>
               <Image
-                source={imageRessource.user}
+                source={{uri: item?.image_link}}
                 style={{
                   width: 50,
                   height: 50,

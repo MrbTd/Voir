@@ -5,42 +5,70 @@ import {
   View,
   ImageBackground,
   Image,
-  Dimensions,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import HeaderYam from '../../components/HeaderYam';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {formaDate, imageRessource, paletteColor} from '../../utils/Constantes';
+import {imageRessource, paletteColor, showToast} from '../../utils/Constantes';
 import CustomButton from '../../components/CustomButton';
 import CustomText from '../../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
-import {dataCommandeEncour} from '../../utils/mocs';
-import {etatCommande, userRole} from '../../utils/data';
+import {etatCommande, statusCode, userRole} from '../../utils/data';
 import {useAuth} from '../../hooks/AuthProvider';
 import {
   actionReducer,
   actionTypeReducer,
 } from '../../contexts/reducers/actionReducer';
-import {apiGetListCommandeGerant} from '../../services/apiService';
+import {apiGetListCommande, getUserConnect} from '../../services/apiService';
 import moment from 'moment';
 
 const ListCommande = () => {
-  const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
   const {auhtContext, dispatchAuhtContext} = useAuth();
   const [dataCommande, setDataCommande] = useState([]) as any;
+  const [dataUser, setDataUser] = useState({}) as any;
+  const [isLoading, setIsLoading] = useState(false);
 
-  const getData = () => {
-    apiGetListCommandeGerant()
+  const getDataUser = () => {
+    getUserConnect(auhtContext.data?.idUser)
       .then(res => {
-        setDataCommande(res?.items);
+        setDataUser(res?.data);
       })
       .catch(err => console.log(err));
   };
 
+  const getData = () => {
+    setIsLoading(true);
+    apiGetListCommande()
+      .then(res => {
+        if (res?.status_code == statusCode.SUCESS) {
+          setDataCommande(res?.items);
+        } else {
+          showToast(res?.message);
+          console.log('err apiGetListCommande', res);
+        }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        showToast('un problème est survenu. veuillez réessayer svp !');
+        setIsLoading(false);
+      });
+  };
+
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getData();
+    });
+
     getData();
-  }, []);
+    getDataUser();
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleRefresh = () => {
+    getData();
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -65,7 +93,7 @@ const ListCommande = () => {
                   borderRadius: 5,
                 }}
                 color={paletteColor.yellow}
-                onPress={() => navigation.goBack()}
+                onPress={() => navigation.navigate('Home' as never)}
               />
               <CustomText
                 fontSize={18}
@@ -93,10 +121,12 @@ const ListCommande = () => {
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
-                  source={imageRessource.user}
+                  source={{uri: dataUser?.chemin_image_profil}}
                   style={{width: 50, height: 50, borderRadius: 100}}
                 />
-                <CustomText marginLeft={5}>Toure Ben Daouda</CustomText>
+                <CustomText marginLeft={5}>
+                  {dataUser?.utilisateur?.name}
+                </CustomText>
               </View>
               <TouchableOpacity
                 onPress={() =>
@@ -165,6 +195,17 @@ const ListCommande = () => {
           data={dataCommande}
           keyExtractor={item => item.id.toString()}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={handleRefresh}
+              colors={[
+                paletteColor.yellow,
+                paletteColor.red,
+                paletteColor.green,
+              ]}
+            />
+          }
           renderItem={({item}) => (
             <TouchableOpacity
               style={{
@@ -184,7 +225,7 @@ const ListCommande = () => {
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View>
                   <CustomText fontSize={17} fontWeight="600">
-                    Table n°{item.table_id}
+                    Table n°{item.table?.numero_table}
                   </CustomText>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <MaterialCommunityIcons name="clock-outline" />

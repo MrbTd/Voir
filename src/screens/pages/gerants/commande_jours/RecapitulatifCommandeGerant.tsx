@@ -1,28 +1,20 @@
 import {StyleSheet, View, FlatList, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {imageRessource, paletteColor, showToast} from '../../utils/Constantes';
-import CustomText from '../../components/CustomText';
 
-import CustomTextInput from '../../components/CustomTextInput';
-import CustomButton from '../../components/CustomButton';
-import HeaderYam from '../../components/HeaderYam';
-import {useAuth} from '../../hooks/AuthProvider';
-import {etatCommande, statusCode, userRole} from '../../utils/data';
-import {
-  apiChangeCommandeTermine,
-  apiChangeCommandeencours,
-  apiDetailCommande,
-} from '../../services/apiService';
-import LoadingModal from '../../components/LoadingModal';
 import {useNavigation} from '@react-navigation/native';
+import {useAuth} from '../../../../hooks/AuthProvider';
+import {apiDetailCommande} from '../../../../services/apiService';
+import {paletteColor, showToast} from '../../../../utils/Constantes';
+import CustomText from '../../../../components/CustomText';
+import CustomTextInput from '../../../../components/CustomTextInput';
+import HeaderYam from '../../../../components/HeaderYam';
+import LoadingModal from '../../../../components/LoadingModal';
 
-const RecapitulatifCommande = ({route}: any) => {
+const RecapitulatifCommandeGerant = ({route}: any) => {
   const commande = route.params;
-  const {auhtContext, dispatchAuhtContext} = useAuth();
 
   const [dataDetailCommande, setDataDetailCommande] = useState({}) as any;
   const [isLoading, setIsLoading] = useState(false);
-  const navigation = useNavigation();
   const getData = () => {
     setIsLoading(true);
     apiDetailCommande(commande?.id)
@@ -39,42 +31,6 @@ const RecapitulatifCommande = ({route}: any) => {
   useEffect(() => {
     getData();
   }, []);
-
-  const handleEncour = () => {
-    setIsLoading(true);
-
-    apiChangeCommandeencours(dataDetailCommande?.commande_id)
-      .then(res => {
-        if (res?.status_code == statusCode.SUCESS) {
-          getData();
-          showToast('Commande en cour....');
-        } else {
-          showToast('un problème est survenu. veuillez réessayer svp !');
-        }
-        setIsLoading(false);
-      })
-      .catch(err => console.log(err));
-  };
-
-  const handleTerminer = () => {
-    setIsLoading(true);
-
-    apiChangeCommandeTermine(dataDetailCommande?.commande_id)
-      .then(res => {
-        if (res?.status_code == statusCode.SUCESS) {
-          navigation.navigate('ListCommande' as never);
-          showToast('Commande en terminée....');
-        } else {
-          showToast('un problème est survenu. veuillez réessayer svp !');
-          console.log('recap command', res);
-        }
-        setIsLoading(false);
-      })
-      .catch(err => {
-        setIsLoading(false);
-        console.log(err);
-      });
-  };
 
   const renderItem = ({item}: any) => (
     <View
@@ -141,58 +97,13 @@ const RecapitulatifCommande = ({route}: any) => {
           </CustomText>
         </View>
       </View>
-
-      {auhtContext.data.role === userRole.CUISINIER && (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            marginTop: '5%',
-          }}>
-          <View style={{width: '40%'}}>
-            <CustomButton
-              label="En cours"
-              disabled={
-                dataDetailCommande?.commande?.status == etatCommande.LANCE
-                  ? false
-                  : true
-              }
-              backgroundColor={
-                dataDetailCommande?.commande?.status == etatCommande.LANCE
-                  ? paletteColor.yellow
-                  : paletteColor.grey
-              }
-              onPress={handleEncour}
-            />
-          </View>
-          <View style={{width: '40%'}}>
-            <CustomButton
-              label="Terminer"
-              disabled={
-                dataDetailCommande?.commande?.status == etatCommande.ENCOURS
-                  ? false
-                  : true
-              }
-              backgroundColor={
-                dataDetailCommande?.commande?.status == etatCommande.ENCOURS
-                  ? paletteColor.yellow
-                  : paletteColor.grey
-              }
-              onPress={handleTerminer}
-            />
-          </View>
-        </View>
-      )}
     </View>
   );
-  const handleCommande = () => {};
 
   return (
     <View style={{flex: 1}}>
       <View>
         <HeaderYam />
-
-        {/* navigate={<MaterialCommunityIcons name='menu' size={35} color={paletteColor.white}/>} */}
 
         <View style={{marginTop: '10%', marginHorizontal: '3%'}}>
           <View
@@ -255,6 +166,6 @@ const RecapitulatifCommande = ({route}: any) => {
   );
 };
 
-export default RecapitulatifCommande;
+export default RecapitulatifCommandeGerant;
 
 const styles = StyleSheet.create({});

@@ -13,6 +13,7 @@ import {
 } from '../../../../hooks/dispatchSelector';
 import {initializeBoisson} from '../../../../reducers/gerant/reducerBoisson';
 import LoadingModal from '../../../../components/LoadingModal';
+import {searchData} from '../../../../utils/searchData';
 
 const Boissons = () => {
   const [bottomVisible, setBottomVisible] = useState(false);
@@ -23,11 +24,21 @@ const Boissons = () => {
     state => state.boissonGerant,
   );
 
+  const [recherche, setRecherche] = useState('');
+  const filterRecherche = searchData(recherche, dataBoisson, 'designation');
+
+  useEffect(() => {
+    dispatch(initializeBoisson());
+  }, []);
+
   return (
-    <BodyGerant title="Boissons" onPress={() => setBottomVisible(true)}>
+    <BodyGerant
+      title="Boissons"
+      onPress={() => setBottomVisible(true)}
+      onChangeText={e => setRecherche(e)}>
       <View style={{height: Dimensions.get('screen').height}}>
         <FlatList
-          data={dataBoisson}
+          data={filterRecherche}
           keyExtractor={(item: any) => item.id.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: 300}}

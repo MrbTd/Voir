@@ -40,11 +40,12 @@ export const initializeTable = () => {
       if (result?.status_code == statusCode.SUCESS) {
         dispatch(getTable(result?.items));
       } else {
-        showToast('un problème est survenu. veuillez réessayer svp !');
+        showToast(result?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
       dispatch(isLoadingStateSave(false));
     }
   };
@@ -65,11 +66,16 @@ export const createTable = (
         const result = await apiGetTable();
         dispatch(getTable(result?.items));
         navigation.navigate('Tables' as never);
+      } else {
+        showToast(res?.message);
+
+        console.log('err cree table', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
+      showToast('un problème est survenu. veuillez réessayer svp !');
     }
   };
 };
@@ -89,6 +95,10 @@ export const deleteTable = (
         const result = await apiGetTable();
         dispatch(getTable(result?.items));
         navigation.navigate('Tables' as never);
+      } else {
+        showToast(res?.message);
+
+        console.log('err delete table', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
@@ -112,17 +122,19 @@ export const updateTable = (
       if (res?.status_code == statusCode.SUCESS) {
         showToast('la tables a bien été modifié');
         const result = await apiGetTable();
-        console.log('=======================result=============');
-        console.log(result);
-        console.log('====================================');
+
         dispatch(getTable(result?.items));
         navigation.navigate('Tables' as never);
       } else {
-        console.log('err delete table', res);
+        showToast(res?.message);
+
+        console.log('err update table', res);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+
+      showToast('un problème est survenu. veuillez réessayer svp !');
       dispatch(isLoadingStateSave(false));
     }
   };

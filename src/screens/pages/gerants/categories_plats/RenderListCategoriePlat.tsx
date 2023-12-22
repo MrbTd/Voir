@@ -32,7 +32,7 @@ const RenderListCategoriePlat = ({item}: any) => {
       }>
       <View>
         <Image
-          source={imageRessource.eat}
+          source={{uri: item?.image_link}}
           style={{
             width: 90,
             height: 100,
@@ -49,7 +49,7 @@ const RenderListCategoriePlat = ({item}: any) => {
           justifyContent: 'center',
           paddingHorizontal: '2%',
         }}>
-        <DisplayDetailsComponent title="ID" value={item.id} border={0} />
+        {/* <DisplayDetailsComponent title="ID" value={item.id} border={0} /> */}
         <DisplayDetailsComponent
           title="CATEGORIE"
           value={item.designation}

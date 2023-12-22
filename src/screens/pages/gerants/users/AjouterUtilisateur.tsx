@@ -87,20 +87,32 @@ const AjouterUtilisateur = ({
       btnTitle="Ajouter">
       <TextInput
         placeholder="NOM & PRENOM :"
-        style={{borderBottomWidth: 0.5, borderBottomColor: paletteColor.grey}}
+        style={{
+          borderBottomWidth: 0.5,
+          borderBottomColor: paletteColor.grey,
+          color: paletteColor.black,
+        }}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setName(e)}
       />
 
       <TextInput
         placeholder="EMAIL :"
-        style={{borderBottomWidth: 0.5, borderBottomColor: paletteColor.grey}}
+        style={{
+          borderBottomWidth: 0.5,
+          borderBottomColor: paletteColor.grey,
+          color: paletteColor.black,
+        }}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setEmail(e)}
       />
       <TextInput
         placeholder="MOT DE PASSE :"
-        style={{borderBottomWidth: 0.5, borderBottomColor: paletteColor.grey}}
+        style={{
+          borderBottomWidth: 0.5,
+          borderBottomColor: paletteColor.grey,
+          color: paletteColor.black,
+        }}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setPassword(e)}
       />
@@ -127,6 +139,9 @@ const AjouterUtilisateur = ({
         }}
         dropdownStyles={{
           backgroundColor: 'white',
+        }}
+        dropdownTextStyles={{
+          color: 'black',
         }}
       />
 

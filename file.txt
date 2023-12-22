@@ -1,0 +1,69 @@
+API FINI GERANT
+
+
+
+loginAuth
+apiGetCategoriePlat
+apiDeletetCategoriePlat
+apiRegisterCategoriePlat
+apiUpdateCategoriePlat
+apiRegisterUtilisateur
+apiGetUtilisateur
+apiDeletetUtilisateur
+apiUpdateUtilisateur
+apiGetSousCategorie
+apiDeletetSousCategorie
+apiRegisterSousCategorie
+apiUpdateSousCategorie
+apiGetBoisson
+apiDeletetBoisson
+apiRegisterBoisson
+apiUpdateBoisson
+apiGetTable
+apiDeletetTable
+apiRegisterTable
+apiUpdateTable
+apiGetPlat
+apiDeletetPlat
+apiRegisterPlat
+apiUpdatePlat
+apiGetAvis
+
+
+
+API A TRAVAILLER GERANT
+
+apiGetListCommandeGerant
+affichage des images sur tous les ecrans de la vue du GERANT
+detail de la liste des commandes
+
+
+----------------------------------------------------------------
+
+API FINI SERVEUR
+
+LISTE DES commandes
+LISTE DES TABLES
+loginAuth
+
+
+
+API A TRAVAILLER SERVEUR
+
+CREATION DE COMMANDE 
+AFFICHAGE DES COMMANDE EN COURS 
+DETAIL DES COMMANDE EN COURS
+AFFICHAGE DES COMMANDE DU SERVEUR
+DETAIL DES COMMANDE DU SERVEUR
+
+----------------------------------------------------------------
+
+API FINI CUISINIER
+loginAuth
+
+API A TRAVAILLER CUISINIER
+
+NOTIFICATION
+AFFICHAGE DES COMMANDE PASSE
+CREATION DE COMMANDE EN COURS
+CREATION DE COMMANDE EN TERMINE

@@ -8,9 +8,11 @@ import {
 import React, {useState} from 'react';
 import BottomSheetComponent from '../../../../components/BottomSheetComponent';
 import {
+  getExtension,
   imageRessource,
   paletteColor,
   showToast,
+  uuidCustome,
 } from '../../../../utils/Constantes';
 import CustomText from '../../../../components/CustomText';
 import DocumentPicker from 'react-native-document-picker';
@@ -39,7 +41,12 @@ const ModifierBoissons = ({
   const [name, setName] = useState(item?.designation);
   const [description, setDescription] = useState(item?.description);
   const [prix, setPrix] = useState(item?.prix);
-  const [filePicture, setFilePicture] = useState(item?.image) as any;
+
+  const [filePicture, setFilePicture] = useState({
+    uri: item?.image_link,
+    type: `image/${getExtension(item?.image_link)}`,
+    name: uuidCustome.slice(0, 11) + '.' + getExtension(item?.image_link),
+  }) as any;
 
   const handleSubmit = async () => {
     const picture = {
@@ -56,17 +63,11 @@ const ModifierBoissons = ({
     if (!handleError()) {
       dispatch(updateBoisson(item?.id, formData, navigation));
     }
-    resetState();
     setBottomVisible(false);
   };
-  const resetState = () => {
-    setName('');
-    setDescription('');
-    setPrix('');
-    setFilePicture(null);
-  };
+
   const handleError = () => {
-    if (!name || !description || !prix || !filePicture) {
+    if (!name || !description || !prix || !filePicture?.uri) {
       return true;
     } else {
       return false;
@@ -86,14 +87,14 @@ const ModifierBoissons = ({
       btnTitle="Modifier">
       <TextInput
         placeholder="DESIGNATION:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setName(e)}
         defaultValue={name}
       />
       <TextInput
         placeholder="DESCRIPTION:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setDescription(e)}
         defaultValue={description}
@@ -101,7 +102,7 @@ const ModifierBoissons = ({
 
       <TextInput
         placeholder="PRIX:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setPrix(e)}
         keyboardType="numeric"

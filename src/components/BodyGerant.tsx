@@ -84,6 +84,7 @@ const BodyGerant = ({
               placeholder="Rechercher"
               placeholderTextColor={paletteColor.marron}
               onChangeText={onChangeText}
+              style={{color: paletteColor.black}}
             />
           </View>
         </View>

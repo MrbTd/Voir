@@ -80,7 +80,7 @@ const AjouterSousCategoriePlats = ({
       };
     });
     setPlatCatData(data);
-  }, []);
+  }, [dataCatPlat]);
 
   return (
     <BottomSheetComponent
@@ -95,7 +95,7 @@ const AjouterSousCategoriePlats = ({
       btnTitle="Ajouter">
       <TextInput
         placeholder="NOM:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setName(e)}
       />
@@ -123,6 +123,9 @@ const AjouterSousCategoriePlats = ({
         }}
         dropdownStyles={{
           backgroundColor: 'white',
+        }}
+        dropdownTextStyles={{
+          color: 'black',
         }}
       />
 

@@ -13,6 +13,7 @@ import {
 } from '../../../../hooks/dispatchSelector';
 import {initializeTable} from '../../../../reducers/gerant/reducerTable';
 import LoadingModal from '../../../../components/LoadingModal';
+import {searchData} from '../../../../utils/searchData';
 
 const Tables = () => {
   const [bottomVisible, setBottomVisible] = useState(false);
@@ -23,11 +24,20 @@ const Tables = () => {
     state => state.tableGerant,
   );
 
+  const [recherche, setRecherche] = useState('');
+  const filterRecherche = searchData(recherche, dataTable, 'numero_table');
+
+  useEffect(() => {
+    dispatch(initializeTable());
+  }, []);
   return (
-    <BodyGerant title="Tables" onPress={() => setBottomVisible(true)}>
+    <BodyGerant
+      title="Tables"
+      onPress={() => setBottomVisible(true)}
+      onChangeText={e => setRecherche(e)}>
       <View style={{height: Dimensions.get('screen').height}}>
         <FlatList
-          data={dataTable}
+          data={filterRecherche}
           keyExtractor={(item: any) => item.id.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: 300}}

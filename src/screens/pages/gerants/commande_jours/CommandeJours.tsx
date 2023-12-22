@@ -1,6 +1,7 @@
 import {
   Dimensions,
   FlatList,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,26 +12,48 @@ import BodyGerant from '../../../../components/BodyGerant';
 import CustomText from '../../../../components/CustomText';
 import {formaDate, paletteColor} from '../../../../utils/Constantes';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {dataCommandeEncour} from '../../../../utils/mocs';
 import {useNavigation} from '@react-navigation/native';
 import {apiGetListCommandeGerant} from '../../../../services/apiService';
+import moment from 'moment';
+import {etatCommande} from '../../../../utils/data';
+import LoadingModal from '../../../../components/LoadingModal';
+import {searchData} from '../../../../utils/searchData';
 
 const CommandeJours = () => {
   const navigation = useNavigation();
   const [dataCommande, setDataCommande] = useState([]) as any;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [recherche, setRecherche] = useState('');
+  const filterRecherche = searchData(recherche, dataCommande, 'montant_total');
 
   const getData = () => {
+    setIsLoading(true);
     apiGetListCommandeGerant()
-      .then(res => setDataCommande(res?.items))
-      .catch(err => console.log(err));
+      .then(res => {
+        setIsLoading(false);
+
+        setDataCommande(res?.data);
+      })
+      .catch(err => {
+        console.log(err);
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
     getData();
   }, []);
 
+  const handleRefresh = () => {
+    getData();
+  };
+
   return (
-    <BodyGerant title="Commande journalières" isBtnAvis={false}>
+    <BodyGerant
+      title="Commande journalières"
+      isBtnAvis={false}
+      onChangeText={e => setRecherche(e)}>
       <View style={{flex: 1}}>
         <View
           style={{
@@ -38,9 +61,20 @@ const CommandeJours = () => {
             marginTop: '8%',
           }}>
           <FlatList
-            data={dataCommande}
+            data={filterRecherche}
             keyExtractor={item => item.id.toString()}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={handleRefresh}
+                colors={[
+                  paletteColor.yellow,
+                  paletteColor.red,
+                  paletteColor.green,
+                ]}
+              />
+            }
             renderItem={({item}) => (
               <TouchableOpacity
                 style={{
@@ -50,7 +84,12 @@ const CommandeJours = () => {
                   marginVertical: '2%',
                   padding: '4%',
                 }}
-                onPress={() => navigation.navigate('DetailsCommande' as never)}>
+                onPress={() =>
+                  navigation.navigate({
+                    name: 'RecapitulatifCommandeGerant',
+                    params: item,
+                  } as never)
+                }>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -58,12 +97,12 @@ const CommandeJours = () => {
                   }}>
                   <View>
                     <CustomText fontSize={17} fontWeight="600">
-                      Table n°{item.table_id}
+                      Table n°{item.table?.numero_table}
                     </CustomText>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <MaterialCommunityIcons name="clock-outline" />
                       <CustomText textAlign="center">
-                        {formaDate(item.created_at)}
+                        {moment(item.created_at).format('LT')}
                       </CustomText>
                     </View>
                   </View>
@@ -94,7 +133,8 @@ const CommandeJours = () => {
                     />
                     <MaterialCommunityIcons
                       name={
-                        item.status == 'Terminer' || item.status == 'En cours'
+                        item.status == etatCommande.TERMINER ||
+                        item.status == etatCommande.ENCOURS
                           ? 'checkbox-marked-circle'
                           : 'checkbox-blank-circle-outline'
                       }
@@ -110,7 +150,7 @@ const CommandeJours = () => {
                     />
                     <MaterialCommunityIcons
                       name={
-                        item.status == 'Terminer'
+                        item.status == etatCommande.TERMINER
                           ? 'checkbox-marked-circle'
                           : 'checkbox-blank-circle-outline'
                       }

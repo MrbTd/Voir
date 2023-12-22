@@ -7,6 +7,7 @@ import DisplayDetailsComponent from '../../../../components/DisplayDetailsCompon
 
 const RenderListBoissons = ({item}: any) => {
   const navigation = useNavigation();
+
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -25,7 +26,7 @@ const RenderListBoissons = ({item}: any) => {
       }>
       <View>
         <Image
-          source={imageRessource.salade}
+          source={{uri: item?.image_link}}
           style={{
             width: 90,
             height: 100,

@@ -28,6 +28,7 @@ const GlobalNavigation = () => {
         actionReducer(actionTypeReducer.RESTORE_TOKEN, {
           role: user?.role,
           token: user?.token,
+          idUser: user?.idUser,
         }),
       );
     };

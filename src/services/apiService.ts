@@ -8,6 +8,13 @@ export const loginAuth = async (data: {email: string; password: string}) => {
   return result.data;
 };
 
+export const getUserConnect = async (id: string) => {
+  const result = await axiosInstance.get(
+    baseUrl + '/utilisateurconnecte/' + id,
+  );
+  return result.data;
+};
+
 //-------------------- GERANTS --------------------
 
 //CATEGORIE PLATS
@@ -150,7 +157,7 @@ export const apiUpdatePlat = async (id: string, data: any) => {
 // LISTE COMMANDE GERANT
 
 export const apiGetListCommandeGerant = async () => {
-  const result = await axiosInstance.get(baseUrl + '/commandes');
+  const result = await axiosInstance.get(baseUrl + '/commandesterminees');
   return result.data;
 };
 
@@ -165,5 +172,32 @@ export const apiGetAvis = async () => {
 
 export const apiCreateCommandeServeur = async (data: any) => {
   const result = await axiosInstance.post(baseUrl + '/commandes/create', data);
+  return result.data;
+};
+
+export const apiDetailCommande = async (id: string) => {
+  const result = await axiosInstance.get(baseUrl + '/detailcommande/' + id);
+  return result.data;
+};
+
+export const apiChangeCommandeencours = async (id: string) => {
+  const result = await axiosInstance.put(baseUrl + '/commandeencours/' + id);
+  return result.data;
+};
+
+export const apiChangeCommandeTermine = async (id: string) => {
+  const result = await axiosInstance.put(baseUrl + '/commandeterminer/' + id);
+  return result.data;
+};
+
+export const apiGetListCommande = async () => {
+  const result = await axiosInstance.get(baseUrl + '/commandes');
+  return result.data;
+};
+
+export const apiGetListCommandeParServeur = async (id: string) => {
+  const result = await axiosInstance.get(
+    baseUrl + '/commandesparutilisateur/' + id,
+  );
   return result.data;
 };

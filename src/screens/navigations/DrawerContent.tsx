@@ -19,7 +19,7 @@ const DrawerContent = (props: any) => {
           justifyContent: 'space-around',
           marginTop: '5%',
         }}
-        onPress={() => navigation.navigate('AccueilGerant' as never)}>
+        onPress={() => navigation.navigate('StackAccueilGerant' as never)}>
         <Image source={imageRessource.logo} style={{width: 55, height: 55}} />
         <CustomText fontSize={25} fontWeight="bold">
           Restaurant
@@ -61,7 +61,7 @@ const DrawerContent = (props: any) => {
         />
         <DrawerItem
           label={() => <CustomText>Commande journalieres</CustomText>}
-          onPress={() => navigation.navigate('CommandeJours' as never)}
+          onPress={() => navigation.navigate('StackCommandeJour' as never)}
         />
       </View>
     </DrawerContentScrollView>

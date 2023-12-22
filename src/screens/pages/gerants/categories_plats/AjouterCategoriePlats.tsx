@@ -78,7 +78,7 @@ const AjouterCategoriePlats = ({
       btnTitle="Ajouter">
       <TextInput
         placeholder="Designation:"
-        style={{borderBottomWidth: 0.5}}
+        style={{borderBottomWidth: 0.5, color: paletteColor.black}}
         placeholderTextColor={paletteColor.marron}
         onChangeText={e => setDesignation(e)}
       />

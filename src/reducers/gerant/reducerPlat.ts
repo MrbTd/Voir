@@ -39,12 +39,15 @@ export const initializePlat = () => {
 
       if (result?.status_code == statusCode.SUCESS) {
         dispatch(getPlat(result?.items));
+        console.log('recuperation', result?.items[0]);
       } else {
-        showToast('un problème est survenu. veuillez réessayer svp !');
+        showToast(result?.message);
+        console.log('error init plat', result);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
       dispatch(isLoadingStateSave(false));
     }
   };
@@ -61,14 +64,20 @@ export const createPlat = (
       const res = await apiRegisterPlat(formData);
 
       if (res?.status_code == statusCode.SUCESS) {
-        showToast('le Plat a bien été crée');
         const result = await apiGetPlat();
         dispatch(getPlat(result?.items));
         navigation.navigate('Plats' as never);
+        showToast('le Plat a bien été crée');
+      } else {
+        console.log('err cree plat', res);
+        showToast(res?.message);
       }
+
       dispatch(isLoadingStateSave(false));
     } catch (error) {
       console.log('error', error);
+      showToast('un problème est survenu. veuillez réessayer svp !');
+
       dispatch(isLoadingStateSave(false));
     }
   };
@@ -89,9 +98,13 @@ export const deletePlat = (
         const result = await apiGetPlat();
         dispatch(getPlat(result?.items));
         navigation.navigate('Plats' as never);
+      } else {
+        console.log('err delete plat', res);
+        showToast(res?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
+      showToast('un problème est survenu. veuillez réessayer svp !');
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
     }
@@ -116,10 +129,12 @@ export const updatePlat = (
         navigation.navigate('Plats' as never);
         showToast('le Plat a bien été modifié');
       } else {
-        console.log('err  Plats', res);
+        console.log('err update plat', res);
+        showToast(res?.message);
       }
       dispatch(isLoadingStateSave(false));
     } catch (error) {
+      showToast('un problème est survenu. veuillez réessayer svp !');
       console.log('error', error);
       dispatch(isLoadingStateSave(false));
     }

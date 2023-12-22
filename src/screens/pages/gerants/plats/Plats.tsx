@@ -12,6 +12,9 @@ import {
   useAppSelector,
 } from '../../../../hooks/dispatchSelector';
 import {initializePlat} from '../../../../reducers/gerant/reducerPlat';
+import {searchData} from '../../../../utils/searchData';
+import {initializeSousCategorie} from '../../../../reducers/gerant/reducerSousCategorie';
+import {initializeCategoriePlat} from '../../../../reducers/gerant/reducerCategoriePlat';
 
 const Plats = () => {
   const navigation = useNavigation();
@@ -19,11 +22,23 @@ const Plats = () => {
   const dispatch = useAppDispatch();
   const {dataPlat, isLoadingPlat} = useAppSelector(state => state.platGerant);
 
+  const [recherche, setRecherche] = useState('');
+  const filterRecherche = searchData(recherche, dataPlat, 'name');
+
+  useEffect(() => {
+    dispatch(initializePlat());
+    dispatch(initializeSousCategorie());
+    dispatch(initializeCategoriePlat());
+  }, []);
+
   return (
-    <BodyGerant title="Plats" onPress={() => setBottomVisible(true)}>
+    <BodyGerant
+      title="Plats"
+      onPress={() => setBottomVisible(true)}
+      onChangeText={e => setRecherche(e)}>
       <View style={{height: Dimensions.get('screen').height}}>
         <FlatList
-          data={dataPlat}
+          data={filterRecherche}
           keyExtractor={(item: any) => item.id.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: 300}}
